@@ -70,23 +70,22 @@
 ## 예시 · 사전점검 제출용 네트워크 도표
 
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph NET["인터넷"]
-    EVAL["🔎 평가자 PC<br/>Windows 11 · Chrome"]
+    EVAL["평가자 PC<br/>Chrome"]
   end
   subgraph DMZ["DMZ (172.16.10.0/28)"]
-    FW["🧱 방화벽<br/>443 인바운드 허용"]
-    PROXY["🔀 리버스 프록시<br/>gs-test.example.co.kr → 172.16.10.20"]
+    FW["방화벽<br/>443 허용"]
+    PROXY["리버스 프록시<br/>172.16.10.20"]
   end
   subgraph APP["업무망 (10.20.30.0/24)"]
-    WEB["🖥️ 웹·API 서버<br/>10.20.30.11"]
-    DB["🗄️ DB 서버<br/>10.20.30.21"]
-    FILE["💾 파일 저장소<br/>10.20.30.31"]
-    OPS["🖥️ 운영자 단말<br/>10.20.30.100"]
+    WEB["웹·API 서버<br/>10.20.30.11"]
+    DB["DB 서버<br/>10.20.30.21"]
+    FILE["파일 저장소<br/>10.20.30.31"]
   end
   subgraph DEV["장비망 (10.20.40.0/24)"]
-    CAM["📹 CCTV 카메라<br/>10.20.40.11"]
-    PLC["⚙️ PLC<br/>10.20.40.21"]
+    CAM["CCTV 카메라<br/>10.20.40.11"]
+    PLC["PLC<br/>10.20.40.21"]
   end
 
   EVAL -->|"HTTPS 443"| FW
@@ -94,7 +93,6 @@ flowchart LR
   PROXY -->|"HTTP 8080"| WEB
   WEB -->|"TCP 5432"| DB
   WEB -->|"SMB 445"| FILE
-  OPS -->|"SSH 22"| WEB
   WEB -->|"RTSP 554"| CAM
   WEB -->|"Modbus TCP 502"| PLC
 
@@ -103,9 +101,11 @@ flowchart LR
   style APP fill:#fbfdfc,stroke:#bfe3c9,color:#0b3d1e
   style DEV fill:#f4f7fb,stroke:#9db6d6,color:#1b3350
   classDef dev fill:#ffffff,stroke:#90a4ae,color:#263238
-  class EVAL,FW,PROXY,WEB,DB,FILE,OPS,CAM,PLC dev
+  class EVAL,FW,PROXY,WEB,DB,FILE,CAM,PLC dev
   linkStyle default stroke:#546e7a,stroke-width:1.8px
 ```
+
+> 운영자 단말의 접속(SSH 22 등)은 그림을 복잡하게 하므로 **접속 정보표에 적습니다**. 관리 포트를 따로 열어야 한다면 표에 한 줄 추가하고, 그림에는 점선 없이 두는 편이 읽기 쉽습니다.
 
 **범례** `──▶` 접속 방향(출발지 → 목적지) · 라벨은 `프로토콜 포트` · 노란 상자 DMZ · 화살표가 없는 구간은 포트 미오픈
 
