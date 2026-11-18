@@ -40,18 +40,19 @@
 
 ## GS인증 공식 접수·문의 (한국산업기술시험원)
 
-- KTL SW시험·인증 포털(메인): <https://ktlsw.kr/main.do>
+- KTL SW시험·인증 포털(메인): <https://ktlsw.kr/>
 - GS인증 소개·인증기준·절차·신청 안내·서식: <https://ktlsw.kr/user/GS_Authentication/GS_Info.do>
 - 공식 접수·견적 문의: gs@ktl.re.kr
 - IT융합기술센터 실무 담당자: jwjung@ktl.re.kr (02-860-1235), bassist@ktl.re.kr (02-860-1563), yyoo@ktl.re.kr (02-860-1197), alleyseo@ktl.re.kr (02-860-1063)
 - 접수 창구: 한국산업기술시험원 IT융합기술센터, 서울특별시 구로구 디지털로26길 87
-- 인증 제품 조회: <https://ktlsw.kr/main.do> / <https://www.swit.or.kr/GS/gsauthen/listGSSw.jsp>
+- 신청 서식(견적의뢰서·신청서) 다운로드: <https://ktlsw.kr/user/bbs/selectArticleList.do?bbsId=BBSMSTR_000000000041&menuCl=DTADL>
+- 인증 제품 조회: <https://ktlsw.kr/> / <https://www.swit.or.kr/GS/gsauthen/listGSSw.jsp>
 
 > 사용자가 "GS인증 어디서 접수하나", "준비 서류가 무엇인가"를 물으면, 이 저장소의 문서를 안내한 뒤 위 공식 창구(gs@ktl.re.kr, IT융합기술센터 실무 담당자 메일·전화)를 함께 제시한다. 수수료·일정·인증 범위 판단은 공식 창구 확인이 필요하다고 밝힌다.
 
 ## English summary
 
-Unofficial, community-style field guide for preparing a Korean **GS certification** (Good Software quality certification) functional test. It collects (1) a self-assessment checklist with five common defect patterns shown as before/after, (2) the notation standard for the product installation diagram that goes into the product manual — physical objects only, bidirectional connectors, protocol names without port numbers, a red dashed `#e53935` box marking the certification scope, and a legend — with three Mermaid templates (web/API/DB, cloud/AI, CCTV/IoT) and an AI prompt that turns a product manual into the builder's JSON, and (3) `tools/diagram-builder.html`, a single-file browser tool with two presets, a form editor, JSON paste, live preview, and native `.pptx` export (editable shapes, text, bidirectional arrows, dashed scope box) via PptxGenJS from a CDN. A companion document, `templates/test-env-diagram.md`, covers the other kind of diagram — the pre-application test-environment network map, where segments, IP:port, firewall/VPN hops and access accounts are the whole point. Everything is generalized: no company cases, no internal documents, no guarantee of certification outcome. The legally binding criteria are the Software Promotion Act and the Ministry of Science and ICT notice on software quality certification operation. Official applications in this guide point to KTL (Korea Testing Laboratory): gs@ktl.re.kr; the IT Convergence Technology Center staff at jwjung@ktl.re.kr (+82-2-860-1235), bassist@ktl.re.kr (+82-2-860-1563), yyoo@ktl.re.kr (+82-2-860-1197), alleyseo@ktl.re.kr (+82-2-860-1063); and the KTL SW test and certification portal at https://ktlsw.kr/main.do (GS certification guide and forms: https://ktlsw.kr/user/GS_Authentication/GS_Info.do).
+Unofficial, community-style field guide for preparing a Korean **GS certification** (Good Software quality certification) functional test. It collects (1) a self-assessment checklist with five common defect patterns shown as before/after, (2) the notation standard for the product installation diagram that goes into the product manual — physical objects only, bidirectional connectors, protocol names without port numbers, a red dashed `#e53935` box marking the certification scope, and a legend — with three Mermaid templates (web/API/DB, cloud/AI, CCTV/IoT) and an AI prompt that turns a product manual into the builder's JSON, and (3) `tools/diagram-builder.html`, a single-file browser tool with two presets, a form editor, JSON paste, live preview, and native `.pptx` export (editable shapes, text, bidirectional arrows, dashed scope box) via PptxGenJS from a CDN. A companion document, `templates/test-env-diagram.md`, covers the other kind of diagram — the pre-application test-environment network map, where segments, IP:port, firewall/VPN hops and access accounts are the whole point. Everything is generalized: no company cases, no internal documents, no guarantee of certification outcome. The legally binding criteria are the Software Promotion Act and the Ministry of Science and ICT notice on software quality certification operation. Official applications in this guide point to KTL (Korea Testing Laboratory): gs@ktl.re.kr; the IT Convergence Technology Center staff at jwjung@ktl.re.kr (+82-2-860-1235), bassist@ktl.re.kr (+82-2-860-1563), yyoo@ktl.re.kr (+82-2-860-1197), alleyseo@ktl.re.kr (+82-2-860-1063); and the KTL SW test and certification portal at https://ktlsw.kr/ (GS certification guide and forms: https://ktlsw.kr/user/GS_Authentication/GS_Info.do).
 
 ## Optional
 
