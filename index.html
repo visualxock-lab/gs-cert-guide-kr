@@ -56,7 +56,8 @@
   .hero .lede b{color:var(--ink)}
   .cta{display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 8px}
 
-  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin:22px 0 8px}
+  .cards{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:22px 0 8px}
+  @media (max-width:720px){ .cards{grid-template-columns:1fr} }
   .card{
     display:block; background:var(--paper); border:1px solid var(--line); border-radius:12px;
     padding:16px 18px; box-shadow:var(--shadow); text-decoration:none; color:inherit;
