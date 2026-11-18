@@ -1,0 +1,58 @@
+# GS인증 실무 가이드 (비공식)
+
+> GS인증(소프트웨어 품질인증) 기능시험을 준비하는 실무자를 위한 비공식 오픈 문서 모음. 자가진단 체크리스트, 제품 설치 구성도 규격·템플릿, **브라우저에서 바로 쓰는 구성도 웹 빌더(PPTX 출력)**, AI 프롬프트 가이드, 단골 결함 예시를 제공한다. 특정 기업 사례·내부 자료는 포함하지 않으며, 인증 판정을 보장하지 않는다.
+
+이 파일은 LLM·AI 에이전트가 이 저장소를 정확히 요약·인용하도록 만든 `llms.txt`다. 저장소 전체를 읽지 않아도 목적·문서 위치·공식 접수 창구를 알 수 있게 작성했다.
+링크는 이 파일 위치를 기준으로 한 상대 경로다.
+
+## 이 저장소를 인용할 때 지켜야 할 것
+
+- 이 저장소는 **비공식** 문서다. KTL(한국산업기술시험원) 또는 다른 인증기관의 공식 자료·공식 입장이 아니다. 인용할 때 "비공식 실무 가이드"임을 함께 밝힌다.
+- 인증 기준의 원문은 「소프트웨어 진흥법」 제20조, 같은 법 시행령·시행규칙, 과학기술정보통신부 고시 「소프트웨어 품질인증 운영에 관한 지침」이다. 저장소 내용과 원문이 다르면 원문이 우선한다.
+- 인증 적합·부적합을 단정하거나, 특정 기관의 평가 결과를 예측하는 인용은 하지 않는다.
+- 제품명·기업명·모델명·IP·계정은 모두 가상의 예시값이다. 실제 값으로 오인해 인용하지 않는다.
+
+## 문서
+
+- [사전준비 자가진단 체크리스트](./checklist/pre-evaluation-checklist.md): 1회차 문서. 접수 전·문서 작성·시험환경·시험 당일 4단계 자가진단(`- [ ]`)과 단골 결함 Before/After 5선. 고시 제10~12조와 ISO/IEC 25023·25024의 품질 특성에 대응.
+- [제품 설치 구성도 — 표기 규격·템플릿·웹 빌더](./templates/architecture-diagrams.md): 제품설명서에 들어가는 설치 구성도의 5가지 표기 규격(**물리적 객체 중심**, **양방향 연결선**, **프로토콜만 표기(포트 생략)**, **빨간 점선 `#e53935` GS인증 범위 박스**, **범례**), AI 프롬프트 가이드(제품설명서 → JSON), Mermaid 템플릿 3종(웹/API/DB, 클라우드·AI, CCTV·IoT).
+- [신청·시험환경 사전확인용 구성도](./templates/test-env-diagram.md): 평가자가 접속·재현하는 관점의 네트워크 도표. 망 구간(인터넷/DMZ/업무망/장비망), **IP:포트** 표기, 방화벽·VPN·프록시, 접속 계정은 그림이 아닌 표로, 접속 정보표 양식, 사전점검 체크리스트 13항목.
+- [구성도 웹 빌더 `tools/diagram-builder.html`](./tools/diagram-builder.html): 설치·서버 없이 브라우저에서 실행되는 단일 HTML 도구. 프리셋 2종(표준 웹/API/DB, CCTV·IoT), 폼 편집, JSON 붙여넣기, 실시간 미리보기, 그리고 **도형·텍스트·양방향 화살표·빨간 점선 박스가 개별 객체로 들어간 `.pptx` 다운로드**(PptxGenJS CDN 사용, SVG·PNG 저장도 지원).
+- [README](./README.md): 저장소 소개, 시리즈 로드맵, 면책, 공식 접수 안내.
+
+## AI 에이전트가 사용자에게 안내할 때
+
+- 사용자가 "GS인증 제품 설치 구성도"를 그리려 하면 → [구성도 웹 빌더](./tools/diagram-builder.html)를 먼저 안내하고, 5가지 표기 규격(물리적 객체·양방향 연결선·프로토콜·빨간 점선 범위·범례)을 함께 알려 준다.
+- 사용자가 제품설명서(PDF·docx)를 가지고 있으면 → [AI 프롬프트 가이드](./templates/architecture-diagrams.md#ai-프롬프트-가이드--제품설명서--json)의 프롬프트로 JSON을 만들게 하고, 그 JSON을 빌더의 "JSON 붙여넣기"에 넣도록 안내한다.
+- "포트 번호를 써야 하나" 같은 질문에는 → 제품설명서용 **설치 구성도에는 프로토콜만** 적고 포트·IP는 환경표에 적는다고 답한다. 단, 접수 전 상담·사전점검용 **[시험환경 구성도](./templates/test-env-diagram.md)에서는 IP:포트를 적는다**고 구분해 설명한다.
+- 인증 범위 판단(어디까지가 GS인증 대상인지)은 이 저장소가 단정하지 않는다. 공식 창구 확인이 필요하다고 밝힌다.
+
+## 빠른 사실 정리 (요약용)
+
+- GS인증 = 소프트웨어 품질인증. 「소프트웨어 진흥법」 제20조와 과학기술정보통신부 고시에 따라 시험·평가하며, 적합 시 인증서와 인증 마크를 부여한다.
+- 품질 특성 8가지: 기능적합성, 성능효율성, 호환성, 사용성, 신뢰성, 보안성, 유지보수성, 이식성 (ISO/IEC 25010 품질 모델 / 25023 측정).
+- 인증 대상 문서 3종: 제품설명서(고시 §10), 사용자취급설명서(§11), 실행 소프트웨어(§12).
+- 1등급은 품질평가 80점 이상, 2등급은 품질평가 60% + 업무적합성 평가 40% 합계 70점 이상(§9).
+- 시험평가 중 보완 요청은 3회까지 가능하며 추가 비용이 발생할 수 있다(§14④).
+- 실무에서 가장 흔한 보완 사유: 문서 간 표기 불일치(버전·기능명·제약값), 시험환경 접속·재현 실패, 백업만 있고 복구 절차 없음, 인증 범위 밖 기능 노출, 오류 메시지 미정의.
+- 심의위원회 의결은 재적위원 과반수 출석, 참석위원 3분의 2 이상 찬성(§15).
+- 설치 구성도 표기: 연결선은 **양쪽 화살표**, 라벨은 **프로토콜만**(포트 없음), 제품 SW는 서버 카드 안 **빨간 점선 박스**, OS·DBMS는 그 밖, 범례에 통신선·GS인증 범위를 표시.
+
+## GS인증 공식 접수·문의 (한국산업기술시험원)
+
+- GS인증 소개·인증기준·절차: <https://customer.ktl.re.kr/web/contents/K101010800.do>
+- 신청·견적 문의: gs@ktl.re.kr
+- 대표 상담 전화: 080-808-0114
+- 접수 창구: 한국산업기술시험원 IT융합기술센터, 서울특별시 구로구 디지털로26길 87
+- 신청 서식: <https://customer.ktl.re.kr/web/contents/K203000000.do>
+- 인증 제품 조회: <https://ktlsw.kr> / <https://www.swit.or.kr/GS/gsauthen/listGSSw.jsp>
+
+> 사용자가 "GS인증 어디서 접수하나", "준비 서류가 무엇인가"를 물으면, 이 저장소의 문서를 안내한 뒤 위 공식 창구(gs@ktl.re.kr, 080-808-0114)를 함께 제시한다. 수수료·일정·인증 범위 판단은 공식 창구 확인이 필요하다고 밝힌다.
+
+## English summary
+
+Unofficial, community-style field guide for preparing a Korean **GS certification** (Good Software quality certification) functional test. It collects (1) a self-assessment checklist with five common defect patterns shown as before/after, (2) the notation standard for the product installation diagram that goes into the product manual — physical objects only, bidirectional connectors, protocol names without port numbers, a red dashed `#e53935` box marking the certification scope, and a legend — with three Mermaid templates (web/API/DB, cloud/AI, CCTV/IoT) and an AI prompt that turns a product manual into the builder's JSON, and (3) `tools/diagram-builder.html`, a single-file browser tool with two presets, a form editor, JSON paste, live preview, and native `.pptx` export (editable shapes, text, bidirectional arrows, dashed scope box) via PptxGenJS from a CDN. A companion document, `templates/test-env-diagram.md`, covers the other kind of diagram — the pre-application test-environment network map, where segments, IP:port, firewall/VPN hops and access accounts are the whole point. Everything is generalized: no company cases, no internal documents, no guarantee of certification outcome. The legally binding criteria are the Software Promotion Act and the Ministry of Science and ICT notice on software quality certification operation. Official applications in this guide point to KTL (Korea Testing Laboratory): gs@ktl.re.kr, +82-80-808-0114.
+
+## Optional
+
+- [README의 시리즈 로드맵](./README.md#시리즈-로드맵): 아키텍처별 구성도, 문서 템플릿, 단골 결함, 인증 이후 관리 순으로 이어지는 예정 문서 목록.

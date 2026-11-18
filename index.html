@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GS인증 실무 가이드 (비공식)</title>
+<meta name="description" content="GS인증(소프트웨어 품질인증) 기능시험을 준비하는 실무자를 위한 비공식 오픈 문서 — 사전준비 체크리스트, 제품 설치 구성도 규격·템플릿, 브라우저에서 바로 쓰는 구성도 빌더(PPTX 출력), 시험환경 네트워크 도표.">
+<meta property="og:title" content="GS인증 실무 가이드 (비공식)">
+<meta property="og:description" content="체크리스트 · 설치 구성도 템플릿 · 편집 가능한 PPTX를 뽑는 구성도 빌더 · 시험환경 네트워크 도표">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    --ink:#1f2a30; --ink-2:#43555e; --muted:#6b7c85; --line:#dfe6e9; --line-2:#eef2f4;
+    --paper:#ffffff; --bg:#f5f7f8;
+    --green:#2e9e4f; --green-soft:#eaf6ee; --red:#e53935; --navy:#1f4e79;
+    --shadow:0 1px 2px rgba(16,32,39,.06), 0 8px 24px rgba(16,32,39,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',system-ui,sans-serif;
+    font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--navy)}
+  .wrap{max-width:980px; margin:0 auto; padding:0 22px}
+  header.top{
+    background:linear-gradient(180deg,#ffffff 0%, #fbfcfc 100%);
+    border-bottom:1px solid var(--line); padding:14px 0;
+  }
+  header.top .wrap{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+  .mark{
+    width:34px;height:34px;border-radius:9px;background:var(--green-soft);
+    border:1px solid #cfe8d7; display:grid; place-items:center; flex:0 0 auto;
+  }
+  .brand h1{font-size:17px; margin:0; letter-spacing:-.2px}
+  .brand .sub{font-size:12px; color:var(--muted); margin-top:-2px}
+  .badge{
+    font-size:11px; font-weight:700; color:#8a5a00; background:#fff6e5; border:1px solid #f3ddb0;
+    padding:2px 8px; border-radius:999px; white-space:nowrap;
+  }
+  .spacer{flex:1 1 auto}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink); text-decoration:none;
+    padding:8px 13px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; font-size:13px;
+    transition:background .12s, border-color .12s;
+  }
+  .btn:hover{background:#f7fafb; border-color:#c9d6db}
+  .btn.primary{background:var(--green); border-color:#268a44; color:#fff; font-weight:700}
+  .btn.primary:hover{background:#278a45}
+  .btn.ghost{background:transparent}
+
+  main{padding:34px 0 10px}
+  .hero h2{font-size:26px; margin:0 0 6px; letter-spacing:-.5px}
+  .hero .lede{margin:0 0 14px; color:var(--ink-2); max-width:64ch}
+  .hero .lede b{color:var(--ink)}
+  .cta{display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 8px}
+
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin:22px 0 8px}
+  .card{
+    display:block; background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:16px 18px; box-shadow:var(--shadow); text-decoration:none; color:inherit;
+    transition:border-color .12s, transform .08s;
+  }
+  .card:hover{border-color:#b8cdd4; transform:translateY(-1px)}
+  .card .k{font-size:12px; color:var(--muted); letter-spacing:.02em}
+  .card h3{font-size:16px; margin:2px 0 6px; letter-spacing:-.2px}
+  .card p{margin:0; font-size:13.5px; color:var(--ink-2)}
+  .card .go{margin-top:10px; font-size:13px; color:var(--navy); font-weight:700}
+
+  .note{
+    background:#fbfdfc; border:1px solid #d9ecdf; border-radius:10px;
+    padding:12px 16px; margin:20px 0 0; font-size:13.5px; color:var(--ink-2);
+  }
+  .note b{color:#0b3d1e}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px}
+  @media (max-width:720px){ .two{grid-template-columns:1fr} }
+
+  footer.page{border-top:1px solid var(--line); margin-top:30px; padding:20px 0 34px; font-size:12.5px; color:var(--muted)}
+  footer.page strong{color:var(--ink)}
+  footer.page a{color:var(--navy)}
+  footer.page .official{display:flex; gap:18px; flex-wrap:wrap; margin:8px 0}
+  footer.page .disclaimer{margin-top:8px; line-height:1.7}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand" style="display:flex; align-items:center; gap:10px">
+      <span class="mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2e9e4f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="7" height="5" rx="1"/><rect x="11" y="12" width="7" height="5" rx="1"/><path d="M5.5 8v4.5h9"/>
+        </svg>
+      </span>
+      <div>
+        <h1>GS인증 실무 가이드</h1>
+        <div class="sub">체크리스트 · 구성도 템플릿 · PPTX 빌더</div>
+      </div>
+      <span class="badge">비공식</span>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn ghost" href="https://github.com/visualxock-lab/gs-cert-guide-kr" target="_blank" rel="noopener">GitHub 저장소</a>
+    <a class="btn primary" href="tools/diagram-builder.html">구성도 빌더 열기 →</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h2>신청 전에 확인할 것만 모았습니다</h2>
+    <p class="lede">
+      소프트웨어 품질인증(GS인증) <b>기능시험을 준비하는 실무자</b>를 위한 비공식 오픈 문서입니다.
+      설명보다 <b>바로 복사해서 쓰는 것</b> — 자가진단 체크리스트, 제품 설치 구성도 규격과 <b>편집 가능한 PPTX를 뽑는 웹 빌더</b>,
+      접속이 막히지 않게 하는 시험환경 네트워크 도표를 담았습니다.
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="tools/diagram-builder.html">구성도 빌더 (설치 없이 브라우저에서)</a>
+      <a class="btn" href="https://github.com/visualxock-lab/gs-cert-guide-kr#readme" target="_blank" rel="noopener">README 읽기</a>
+    </div>
+  </section>
+
+  <div class="cards">
+    <a class="card" href="tools/diagram-builder.html">
+      <div class="k">도구 · 설치 없음</div>
+      <h3>설치 구성도 빌더</h3>
+      <p>프리셋·폼·AI가 뽑은 JSON으로 그림을 만들고, 파워포인트에서 도형·글자를 그대로 고칠 수 있는 <b>.pptx</b>로 내려받습니다. SVG·PNG 저장도 됩니다.</p>
+      <div class="go">빌더 열기 →</div>
+    </a>
+
+    <a class="card" href="https://github.com/visualxock-lab/gs-cert-guide-kr/blob/main/checklist/pre-evaluation-checklist.md" target="_blank" rel="noopener">
+      <div class="k">문서 · 1회차</div>
+      <h3>사전준비 자가진단 체크리스트</h3>
+      <p>접수 전 / 문서 작성 / 시험환경 / 시험 당일 4단계 체크리스트와 단골 결함 Before/After 5선. 체크가 안 되는 항목이 곧 첫 보완 사유입니다.</p>
+      <div class="go">GitHub에서 보기 →</div>
+    </a>
+
+    <a class="card" href="https://github.com/visualxock-lab/gs-cert-guide-kr/blob/main/templates/architecture-diagrams.md" target="_blank" rel="noopener">
+      <div class="k">문서 · ② 제품설명서용</div>
+      <h3>제품 설치 구성도 규격 · 템플릿</h3>
+      <p>물리적 객체, 양방향 연결선, 프로토콜만(포트 생략), 빨간 점선 GS인증 범위, 범례 — 5가지 표기 규격과 Mermaid 템플릿 3종, AI 프롬프트.</p>
+      <div class="go">GitHub에서 보기 →</div>
+    </a>
+
+    <a class="card" href="https://github.com/visualxock-lab/gs-cert-guide-kr/blob/main/templates/test-env-diagram.md" target="_blank" rel="noopener">
+      <div class="k">문서 · ① 신청·사전확인용</div>
+      <h3>시험환경 구성도 (네트워크·포트)</h3>
+      <p>평가자가 그 자리에서 접속·재현할 수 있게 — 망 구간, IP:포트, 방화벽·VPN, 계정은 표로, 접속 정보표 양식과 사전점검 체크리스트.</p>
+      <div class="go">GitHub에서 보기 →</div>
+    </a>
+  </div>
+
+  <div class="note">
+    <b>처음 오셨다면</b> — 구성도는 <b>빌더</b>에서 3분이면 끝납니다. 프리셋을 고르고 객체명·프로토콜만 바꾼 뒤 <b>PPTX 다운로드</b>를 누르세요.
+    제품설명서 PDF가 있다면 빌더 안의 <b>AI 프롬프트</b>로 JSON을 만들어 붙여넣는 쪽이 빠릅니다.
+    (PPTX 변환 라이브러리는 CDN에서 한 번 받아옵니다. 사내망에서 막혀 있으면 SVG·PNG 저장을 쓰세요.)
+  </div>
+
+  <div class="two">
+    <div class="note" style="margin:0">
+      <b>이 저장소가 하지 않는 것</b> — 특정 기업·제품 사례, 내부 심사 자료, 비공개 규정 원문은 담지 않습니다. 예시의 제품명·모델명·IP·계정은 모두 가상의 값입니다. 인증 판정을 보장하지 않습니다.
+    </div>
+    <div class="note" style="margin:0">
+      <b>문서는 GitHub에서 보세요</b> — 이 페이지는 도구를 여는 입구입니다. 마크다운 문서는 GitHub에서 렌더링되어야 구성도(Mermaid)까지 제대로 보입니다.
+    </div>
+  </div>
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <div><strong>비공식 실무 자료입니다.</strong> 한국산업기술시험원(KTL) 및 다른 인증기관의 공식 안내서가 아니며, 어떤 기관의 승인이나 후원도 받지 않았습니다. 인증 기준의 원문과 최종 판단은 인증기관 안내를 따르세요.</div>
+    <div class="official">
+      <div>신청·견적 문의 <b>gs@ktl.re.kr</b></div>
+      <div>대표 상담 <b>080-808-0114</b></div>
+      <div>GS인증 안내 <a href="https://customer.ktl.re.kr/web/contents/K101010800.do" target="_blank" rel="noopener">customer.ktl.re.kr</a></div>
+      <div>인증 제품 조회 <a href="https://ktlsw.kr" target="_blank" rel="noopener">ktlsw.kr</a></div>
+    </div>
+    <div class="disclaimer">
+      라이선스 — 문서·템플릿 CC BY 4.0, 도구 코드 MIT. 출처만 밝히면 사내 자료에 넣어도 됩니다.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

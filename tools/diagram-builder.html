@@ -1,0 +1,1471 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GS인증 설치 구성도 빌더 (비공식)</title>
+<meta name="description" content="GS인증 제품설명서에 넣을 '제품 설치 구성도'를 브라우저에서 그리고, 파워포인트에서 편집할 수 있는 .pptx로 내려받는 비공식 도구입니다.">
+<style>
+  :root{
+    --ink:#1f2a30; --ink-2:#43555e; --muted:#6b7c85; --line:#dfe6e9; --line-2:#eef2f4;
+    --paper:#ffffff; --bg:#f5f7f8; --panel:#ffffff;
+    --green:#2e9e4f; --green-soft:#eaf6ee; --red:#e53935; --red-soft:#fdeceb;
+    --navy:#1f4e79; --accent:#1f4e79;
+    --shadow:0 1px 2px rgba(16,32,39,.06), 0 8px 24px rgba(16,32,39,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',system-ui,sans-serif;
+    font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  header.top{
+    background:linear-gradient(180deg,#ffffff 0%, #fbfcfc 100%);
+    border-bottom:1px solid var(--line);
+    padding:14px 22px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:10px; min-width:0}
+  .brand .mark{
+    width:34px;height:34px;border-radius:9px;background:var(--green-soft);
+    border:1px solid #cfe8d7; display:grid; place-items:center; flex:0 0 auto;
+  }
+  .brand h1{font-size:17px; margin:0; letter-spacing:-.2px; white-space:nowrap}
+  .brand .sub{font-size:12px; color:var(--muted); margin-top:-2px}
+  .badge{
+    font-size:11px; font-weight:700; color:#8a5a00; background:#fff6e5; border:1px solid #f3ddb0;
+    padding:2px 8px; border-radius:999px; white-space:nowrap;
+  }
+  .top .spacer{flex:1 1 auto}
+  .top .actions{display:flex; gap:8px; flex-wrap:wrap}
+  button{font-family:inherit; font-size:13px; cursor:pointer}
+  .btn{
+    border:1px solid var(--line); background:#fff; color:var(--ink); text-decoration:none;
+    padding:8px 12px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;
+    transition:background .12s, border-color .12s, transform .06s;
+  }
+  .btn:hover{background:#f7fafb; border-color:#c9d6db}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:var(--green); border-color:#268a44; color:#fff; font-weight:700}
+  .btn.primary:hover{background:#278a45}
+  .btn.ghost{background:transparent}
+  .btn.small{padding:5px 9px; font-size:12px; border-radius:7px}
+  .btn.danger{color:#b3261e; border-color:#f0cfcc; background:#fffdfd}
+  .btn.danger:hover{background:#fdf3f2}
+
+  main{
+    display:grid; grid-template-columns:392px minmax(0,1fr); gap:18px;
+    padding:18px 22px 8px; align-items:start;
+  }
+  @media (max-width:1080px){ main{grid-template-columns:1fr} }
+
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow)}
+  #controls{padding:6px 12px 14px; max-height:calc(100vh - 150px); overflow:auto}
+  @media (max-width:1080px){ #controls{max-height:none} }
+  details.sec{border-bottom:1px solid var(--line-2); padding:10px 2px}
+  details.sec:last-child{border-bottom:0}
+  details.sec > summary{
+    list-style:none; cursor:pointer; display:flex; align-items:center; gap:8px;
+    font-weight:700; font-size:13px; color:var(--ink); padding:4px 2px; border-radius:6px;
+  }
+  details.sec > summary::-webkit-details-marker{display:none}
+  details.sec > summary::before{
+    content:'▸'; color:var(--muted); font-size:11px; transition:transform .12s;
+  }
+  details.sec[open] > summary::before{transform:rotate(90deg)}
+  details.sec > summary .tag{font-weight:600; color:var(--muted); font-size:11px}
+  .sec-body{padding:8px 2px 2px}
+
+  label.field{display:block; margin:0 0 8px}
+  label.field > span{display:block; font-size:12px; color:var(--ink-2); font-weight:600; margin-bottom:3px}
+  input[type=text], select, textarea{
+    width:100%; font-family:inherit; font-size:13px; color:var(--ink);
+    border:1px solid var(--line); border-radius:7px; padding:6px 8px; background:#fff;
+  }
+  input[type=text]:focus, select:focus, textarea:focus{outline:2px solid #cfe8d7; border-color:#9fd0b0}
+  textarea{resize:vertical; min-height:54px; line-height:1.45; font-family:inherit}
+  .row{display:flex; gap:8px; align-items:flex-end}
+  .row > *{min-width:0}
+  .row .grow{flex:1 1 auto}
+  .hint{font-size:11.5px; color:var(--muted); margin:2px 0 8px; line-height:1.5}
+
+  .node-card{border:1px solid var(--line); border-radius:10px; padding:10px; margin:0 0 10px; background:#fcfdfd}
+  .node-card .nc-head{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+  .node-card .nc-head .idx{
+    width:22px;height:22px;border-radius:6px;background:#eef4f7;color:var(--navy);
+    display:grid;place-items:center;font-size:11px;font-weight:700;flex:0 0 auto;
+  }
+  .node-card .nc-head .nm{font-weight:700; font-size:13px; flex:1 1 auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .small-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+
+  .link-row{display:grid; grid-template-columns:1fr 1fr 68px 30px; gap:6px; align-items:center; margin-bottom:6px}
+  .link-row select, .link-row input{padding:4px 6px; font-size:12px}
+  .icon-btn{border:1px solid var(--line); background:#fff; border-radius:7px; width:30px; height:30px; display:grid; place-items:center; color:#8a9aa2; padding:0}
+  .icon-btn:hover{color:#b3261e; border-color:#f0cfcc; background:#fdf3f2}
+
+  .preset-grid{display:grid; gap:8px}
+  .preset{
+    text-align:left; border:1px solid var(--line); background:#fff; border-radius:10px; padding:9px 11px;
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  .preset:hover{border-color:#bcdcc8; background:#fbfefc}
+  .preset .p-ico{flex:0 0 auto; width:30px; height:30px; border-radius:8px; background:var(--green-soft); display:grid; place-items:center}
+  .preset b{display:block; font-size:12.5px}
+  .preset span{display:block; font-size:11.5px; color:var(--muted); margin-top:1px}
+
+  .checkline{display:flex; gap:8px; align-items:center; font-size:12.5px; color:var(--ink-2); margin:0 0 7px}
+  .checkline input[type=checkbox]{width:15px; height:15px; accent-color:var(--green)}
+  .checkline input[type=color]{width:34px; height:24px; padding:0; border:1px solid var(--line); border-radius:6px; background:#fff}
+
+  /* preview */
+  #stage{position:sticky; top:14px}
+  .stage-head{display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .stage-head .t{font-weight:700; font-size:13px}
+  .stage-head .status{font-size:11.5px; color:var(--muted)}
+  .stage-body{padding:12px; background:
+      linear-gradient(0deg, rgba(0,0,0,.018) 1px, transparent 1px) 0 0/22px 22px,
+      linear-gradient(90deg, rgba(0,0,0,.018) 1px, transparent 1px) 0 0/22px 22px,
+      #fbfcfc;}
+  #svgHost{background:#fff; border:1px solid var(--line); border-radius:10px; overflow:hidden; display:flex; justify-content:center}
+  #svgHost svg{width:100%; height:auto; display:block}
+  .stage-foot{padding:10px 14px; border-top:1px solid var(--line); font-size:11.5px; color:var(--muted); display:flex; gap:14px; flex-wrap:wrap}
+  .steps{margin-top:14px; padding:12px 16px; display:grid; gap:7px; font-size:12.5px; color:var(--ink-2)}
+  .steps b{color:var(--green); font-weight:700}
+
+  footer.page{
+    margin:14px 22px 28px; padding:16px 18px; border:1px solid var(--line); border-radius:12px;
+    background:#fff; color:var(--ink-2); font-size:12.5px; display:grid; gap:10px;
+  }
+  footer.page strong{color:var(--ink)}
+  footer.page a{color:var(--navy)}
+  .official{display:flex; gap:18px; flex-wrap:wrap; font-size:12.5px}
+  .official div{background:#f7fafb; border:1px solid var(--line-2); border-radius:8px; padding:7px 11px}
+  .official b{color:var(--ink)}
+  .disclaimer{font-size:11.5px; color:var(--muted); line-height:1.6}
+
+  #errbar{display:none; margin:0 22px 8px; padding:10px 12px; border-radius:8px; background:var(--red-soft);
+           border:1px solid #f3c9c6; color:#8f1d18; font-size:12.5px; white-space:pre-wrap}
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(10px);
+    background:#1f2a30; color:#fff; padding:9px 16px; border-radius:999px; font-size:12.5px;
+    opacity:0; pointer-events:none; transition:opacity .18s, transform .18s; z-index:50;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="mark" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#2e9e4f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="7" height="5" rx="1"/><rect x="11" y="12" width="7" height="5" rx="1"/><path d="M5.5 8v4.5h9"/>
+      </svg>
+    </div>
+    <div>
+      <h1>GS인증 설치 구성도 빌더</h1>
+      <div class="sub">제품설명서용 설치 구성도 → 편집 가능한 PPTX</div>
+    </div>
+    <span class="badge">비공식 도구</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="actions">
+    <a class="btn ghost" href="../index.html" title="가이드 홈으로">가이드 홈</a>
+    <button class="btn" id="btnSvg" title="SVG(벡터)로 저장">SVG 저장</button>
+    <button class="btn" id="btnPng" title="PNG(이미지)로 저장">PNG 저장</button>
+    <button class="btn primary" id="btnPptx" title="파워포인트에서 도형·텍스트를 그대로 편집">PPTX 다운로드</button>
+  </div>
+</header>
+
+<div id="errbar" role="alert"></div>
+
+<main>
+  <!-- ─────────── left controls ─────────── -->
+  <section class="panel" id="controls" aria-label="구성도 입력">
+
+    <details class="sec" open>
+      <summary>프리셋 <span class="tag">예시 2종</span></summary>
+      <div class="sec-body">
+        <div class="preset-grid">
+          <button class="preset" data-preset="web">
+            <span class="p-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#2e9e4f" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="14" height="4" rx="1"/><rect x="6" y="11" width="6" height="4" rx="1"/><path d="M9 7v4"/></svg>
+            </span>
+            <span><b>① 표준 웹·API·DB 서버형</b><span>PC·모바일 → 업무 서버(HTTPS) + 저장소·백업</span></span>
+          </button>
+          <button class="preset" data-preset="iot">
+            <span class="p-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#2e9e4f" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="6" width="6" height="7" rx="1"/><path d="M8 9.5h3"/><circle cx="14" cy="9.5" r="2.5"/></svg>
+            </span>
+            <span><b>② CCTV·IoT 장비 연계형</b><span>카메라(RTSP)·센서·PLC(Modbus TCP) → 관제 서버</span></span>
+          </button>
+        </div>
+        <p class="hint">프리셋을 누르면 현재 입력이 예시 내용으로 바뀝니다.</p>
+      </div>
+    </details>
+
+    <details class="sec" open>
+      <summary>기본 정보</summary>
+      <div class="sec-body">
+        <div class="row">
+          <label class="field grow"><span>제품명</span><input type="text" id="fProduct" placeholder="예: ○○ 관제 시스템"></label>
+          <label class="field" style="width:96px"><span>버전</span><input type="text" id="fVersion" placeholder="V1.0"></label>
+        </div>
+        <label class="field"><span>부제 (선택)</span><input type="text" id="fSub" placeholder="예: 제품설명서 · 설치 구성도"></label>
+      </div>
+    </details>
+
+    <details class="sec" open>
+      <summary>구성요소 <span class="tag" id="nodeCount"></span></summary>
+      <div class="sec-body">
+        <div id="nodeList"></div>
+        <button class="btn small" id="btnAddNode">＋ 구성요소 추가</button>
+        <p class="hint">
+          중앙 서버는 <b>위치=중앙</b>으로 두고, 그 서버에서 실행되는 제품 소프트웨어는 <b>인증 범위 SW</b> 칸에
+          한 줄에 하나씩 적습니다. OS·DBMS는 <b>인증 범위 밖 SW</b> 칸에 적으면 빨간 점선 밖에 표시됩니다.
+        </p>
+      </div>
+    </details>
+
+    <details class="sec" open>
+      <summary>연결 <span class="tag" id="linkCount"></span></summary>
+      <div class="sec-body">
+        <div id="linkList"></div>
+        <button class="btn small" id="btnAddLink">＋ 연결 추가</button>
+        <p class="hint">프로토콜만 적습니다(HTTP, HTTPS, RTSP, Modbus TCP…). 포트 번호는 쓰지 않습니다.</p>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>표시 옵션</summary>
+      <div class="sec-body">
+        <label class="checkline"><input type="checkbox" id="fModels"> 모델명·제조사 표시 (끄면 객체명만 남는 버전)</label>
+        <label class="checkline"><input type="checkbox" id="fSw"> 인증 범위 SW·OS·DBMS 표시</label>
+        <label class="checkline"><input type="checkbox" id="fLegend"> 범례 표시</label>
+        <label class="checkline"><input type="checkbox" id="fTitle"> 제목 표시</label>
+        <label class="checkline">연결선 색 <input type="color" id="fColor" value="#2e9e4f"></label>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>JSON 붙여넣기 <span class="tag">AI 결과 바로 넣기</span></summary>
+      <div class="sec-body">
+        <textarea id="fJson" spellcheck="false" style="min-height:132px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px" placeholder='{ "productName": "...", "nodes": [ ... ], "links": [ ... ] }'></textarea>
+        <div class="row" style="margin-top:8px">
+          <button class="btn small" id="btnJsonApply">JSON 적용</button>
+          <button class="btn small ghost" id="btnJsonCopy">현재 구성 JSON 복사</button>
+        </div>
+        <p class="hint" id="jsonMsg"></p>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>AI 프롬프트 <span class="tag">제품설명서 → JSON</span></summary>
+      <div class="sec-body">
+        <p class="hint">ChatGPT·Claude에 제품설명서(또는 제품 설명)와 함께 붙여넣으면, 이 도구가 읽는 JSON으로 정리해 줍니다.</p>
+        <button class="btn small" id="btnPrompt">프롬프트 복사</button>
+      </div>
+    </details>
+  </section>
+
+  <!-- ─────────── right preview ─────────── -->
+  <section id="stage">
+    <div class="panel">
+      <div class="stage-head">
+        <span class="t">미리보기</span>
+        <span class="status" id="status">—</span>
+      </div>
+      <div class="stage-body">
+        <div id="svgHost" role="img" aria-label="설치 구성도 미리보기"></div>
+      </div>
+      <div class="stage-foot">
+        <span>PPTX는 도형·텍스트·양방향 화살표·빨간 점선 박스가 각각 개별 객체로 들어갑니다.</span>
+      </div>
+    </div>
+
+    <div class="panel steps">
+      <div><b>①</b> 프리셋·폼·JSON으로 구성 채우기</div>
+      <div><b>②</b> 오른쪽 미리보기로 범위·프로토콜 확인</div>
+      <div><b>③</b> <b>PPTX 다운로드</b> → 파워포인트에서 다듬기</div>
+    </div>
+  </section>
+</main>
+
+<footer class="page">
+  <div><strong>이 도구는 비공식 실무 도구입니다.</strong> 인증 범위·시험환경 구성의 최종 확인은 KTL 공식 창구에서 받으세요.</div>
+  <div class="official">
+    <div>신청·견적 문의 <b>gs@ktl.re.kr</b></div>
+    <div>대표 상담 <b>080-808-0114</b></div>
+    <div>GS인증 안내 <a href="https://customer.ktl.re.kr/web/contents/K101010800.do" target="_blank" rel="noopener">customer.ktl.re.kr</a></div>
+  </div>
+  <div class="disclaimer">
+    예시의 제품명·모델명·제조사·버전은 모두 가상의 값입니다. 실제 제출 시에는 제품설명서의 표기 그대로 바꿔 주세요.
+    이 도구는 어떤 인증기관의 승인이나 후원도 받지 않았습니다.
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* PPTX 라이브러리 로더 — CDN 하나가 막혀도 다음 주소로 넘어간다. */
+(function () {
+  var srcs = [
+    'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js',
+    'https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.bundle.js'
+  ];
+  var i = 0;
+  function next() {
+    if (i >= srcs.length) { window.__pptxLoadFailed = true; return; }
+    var s = document.createElement('script');
+    s.src = srcs[i++];
+    s.onerror = next;
+    document.head.appendChild(s);
+  }
+  next();
+})();
+</script>
+<script>
+/* =========================================================================
+   GS인증 설치 구성도 빌더 (비공식) — 순수 프론트엔드 단일 파일 도구
+   데이터 → SVG 미리보기 → PptxGenJS 네이티브 PPTX
+   ========================================================================= */
+(function () {
+  'use strict';
+
+  /* ── 0. 공통 상수 ─────────────────────────────────────────────────── */
+  var W = 1600, H = 900;                 // 캔버스(16:9). PPTX는 120px = 1inch
+  var PXPT = 72 / 120;                   // px → pt
+  var FONT = "'Malgun Gothic','Noto Sans KR','Noto Sans CJK KR',sans-serif";
+  var INK = '#263238', GRAY = '#607d8b', LINE_CARD = '#90a4ae', RED = '#e53935';
+  var CARD_W = 252, SRV_W = 470, PAD = 16, ICON = 56, GAP = 30;
+  var AREA_TOP = 104, AREA_BOTTOM = 812;
+
+  /* ── 1. 라인아이콘 (70x70 좌표계, 선만) ────────────────────────────
+     rect / line / circle / poly / text 프리미티브만 써서 SVG와 PPTX가
+     완전히 같은 그림이 되도록 한다. */
+  var ICONS = {
+    server: [
+      { k: 'rect', x: 10, y: 6, w: 50, h: 58, r: 3 },
+      { k: 'line', x1: 10, y1: 24, x2: 60, y2: 24 },
+      { k: 'line', x1: 10, y1: 44, x2: 60, y2: 44 },
+      { k: 'circle', cx: 18, cy: 15, r: 2 },
+      { k: 'circle', cx: 18, cy: 34, r: 2 },
+      { k: 'circle', cx: 18, cy: 54, r: 2 },
+      { k: 'line', x1: 27, y1: 15, x2: 52, y2: 15 },
+      { k: 'line', x1: 27, y1: 34, x2: 52, y2: 34 },
+      { k: 'line', x1: 27, y1: 54, x2: 52, y2: 54 }
+    ],
+    pc: [
+      { k: 'rect', x: 6, y: 10, w: 58, h: 38, r: 3 },
+      { k: 'line', x1: 35, y1: 48, x2: 35, y2: 58 },
+      { k: 'line', x1: 22, y1: 58, x2: 48, y2: 58 },
+      { k: 'rect', x: 24, y: 30, w: 22, h: 3, r: 1 },
+      { k: 'line', x1: 24, y1: 21, x2: 46, y2: 21 }
+    ],
+    mobile: [
+      { k: 'rect', x: 22, y: 4, w: 26, h: 62, r: 5 },
+      { k: 'line', x1: 30, y1: 12, x2: 40, y2: 12 },
+      { k: 'circle', cx: 35, cy: 57, r: 3 },
+      { k: 'rect', x: 27, y: 19, w: 16, h: 28, r: 1 }
+    ],
+    camera: [
+      { k: 'rect', x: 8, y: 22, w: 34, h: 20, r: 3 },
+      { k: 'poly', pts: [[42, 27], [60, 22], [60, 42], [42, 37]], close: true },
+      { k: 'line', x1: 25, y1: 22, x2: 25, y2: 9 },
+      { k: 'line', x1: 15, y1: 9, x2: 35, y2: 9 },
+      { k: 'line', x1: 16, y1: 52, x2: 30, y2: 52 }
+    ],
+    sensor: [
+      { k: 'rect', x: 23, y: 8, w: 12, h: 30, r: 6 },
+      { k: 'circle', cx: 29, cy: 48, r: 10 },
+      { k: 'line', x1: 29, y1: 20, x2: 29, y2: 44 },
+      { k: 'line', x1: 45, y1: 38, x2: 55, y2: 38 },
+      { k: 'line', x1: 45, y1: 48, x2: 55, y2: 48 }
+    ],
+    plc: [
+      { k: 'rect', x: 6, y: 40, w: 44, h: 24, r: 3 },
+      { k: 'line', x1: 28, y1: 40, x2: 28, y2: 27 },
+      { k: 'circle', cx: 28, cy: 25, r: 2.5 },
+      { k: 'line', x1: 20, y1: 18, x2: 28, y2: 12 },
+      { k: 'line', x1: 28, y1: 12, x2: 36, y2: 18 },
+      { k: 'circle', cx: 16, cy: 52, r: 2 },
+      { k: 'circle', cx: 24, cy: 52, r: 2 },
+      { k: 'line', x1: 33, y1: 52, x2: 44, y2: 52 }
+    ],
+    meter: [
+      { k: 'circle', cx: 33, cy: 33, r: 26 },
+      { k: 'rect', x: 20, y: 18, w: 26, h: 12, r: 2 },
+      { k: 'line', x1: 24, y1: 24, x2: 42, y2: 24 },
+      { k: 'line', x1: 24, y1: 46, x2: 42, y2: 46 },
+      { k: 'line', x1: 23, y1: 58, x2: 23, y2: 66 },
+      { k: 'line', x1: 33, y1: 59, x2: 33, y2: 66 },
+      { k: 'line', x1: 43, y1: 58, x2: 43, y2: 66 }
+    ],
+    gateway: [
+      { k: 'rect', x: 6, y: 20, w: 58, h: 30, r: 4 },
+      { k: 'line', x1: 14, y1: 30, x2: 28, y2: 30 },
+      { k: 'line', x1: 14, y1: 40, x2: 28, y2: 40 },
+      { k: 'poly', pts: [[34, 26], [46, 26], [46, 23], [54, 28.5], [46, 34], [46, 31], [34, 31]], close: true },
+      { k: 'circle', cx: 18, cy: 44, r: 1.5 },
+      { k: 'circle', cx: 24, cy: 44, r: 1.5 }
+    ],
+    cloud: [
+      { k: 'poly', pts: [[16, 50], [10, 50], [10, 40], [17, 34], [22, 24], [33, 18], [45, 20], [52, 27], [60, 30], [62, 40], [56, 50], [46, 50]], close: true }
+    ],
+    db: [
+      { k: 'ellipse', x: 20, y: 8, w: 34, h: 11 },
+      { k: 'line', x1: 20, y1: 13.5, x2: 20, y2: 52 },
+      { k: 'line', x1: 54, y1: 13.5, x2: 54, y2: 52 },
+      { k: 'ellipse', x: 20, y: 47, w: 34, h: 11 },
+      { k: 'line', x1: 20, y1: 30, x2: 54, y2: 30 }
+    ],
+    storage: [
+      { k: 'rect', x: 8, y: 10, w: 54, h: 50, r: 3 },
+      { k: 'line', x1: 8, y1: 27, x2: 62, y2: 27 },
+      { k: 'line', x1: 8, y1: 44, x2: 62, y2: 44 },
+      { k: 'circle', cx: 56, cy: 19, r: 2 },
+      { k: 'circle', cx: 56, cy: 36, r: 2 },
+      { k: 'circle', cx: 56, cy: 53, r: 2 },
+      { k: 'line', x1: 15, y1: 19, x2: 42, y2: 19 },
+      { k: 'line', x1: 15, y1: 36, x2: 42, y2: 36 },
+      { k: 'line', x1: 15, y1: 53, x2: 42, y2: 53 }
+    ],
+    switch: [
+      { k: 'rect', x: 6, y: 22, w: 58, h: 24, r: 3 },
+      { k: 'rect', x: 12, y: 28, w: 7, h: 7, r: 1 },
+      { k: 'rect', x: 23, y: 28, w: 7, h: 7, r: 1 },
+      { k: 'rect', x: 34, y: 28, w: 7, h: 7, r: 1 },
+      { k: 'rect', x: 45, y: 28, w: 7, h: 7, r: 1 },
+      { k: 'line', x1: 14, y1: 40, x2: 26, y2: 40 },
+      { k: 'line', x1: 30, y1: 40, x2: 42, y2: 40 }
+    ],
+    firewall: [
+      { k: 'rect', x: 8, y: 14, w: 54, h: 42, r: 2 },
+      { k: 'line', x1: 8, y1: 28, x2: 62, y2: 28 },
+      { k: 'line', x1: 8, y1: 42, x2: 62, y2: 42 },
+      { k: 'line', x1: 26, y1: 14, x2: 26, y2: 28 },
+      { k: 'line', x1: 44, y1: 14, x2: 44, y2: 28 },
+      { k: 'line', x1: 17, y1: 28, x2: 17, y2: 42 },
+      { k: 'line', x1: 35, y1: 28, x2: 35, y2: 42 },
+      { k: 'line', x1: 53, y1: 28, x2: 53, y2: 42 }
+    ],
+    ups: [
+      { k: 'rect', x: 14, y: 6, w: 42, h: 58, r: 4 },
+      { k: 'rect', x: 22, y: 12, w: 26, h: 9, r: 2 },
+      { k: 'line', x1: 27, y1: 16.5, x2: 43, y2: 16.5 },
+      { k: 'poly', pts: [[38, 28], [28, 44], [35, 44], [31, 58], [44, 38], [37, 38]], close: true }
+    ],
+    aircon: [
+      { k: 'rect', x: 4, y: 10, w: 62, h: 24, r: 5 },
+      { k: 'line', x1: 10, y1: 29, x2: 60, y2: 29 },
+      { k: 'circle', cx: 57, cy: 19, r: 1.8 },
+      { k: 'line', x1: 18, y1: 44, x2: 18, y2: 56 },
+      { k: 'line', x1: 35, y1: 44, x2: 35, y2: 60 },
+      { k: 'line', x1: 52, y1: 44, x2: 52, y2: 56 }
+    ],
+    inverter: [
+      { k: 'rect', x: 14, y: 4, w: 42, h: 62, r: 3 },
+      { k: 'line', x1: 35, y1: 4, x2: 35, y2: 66 },
+      { k: 'poly', pts: [[28, 16], [21, 28], [27, 28], [24, 38], [33, 24], [27, 24]], close: true },
+      { k: 'line', x1: 41, y1: 22, x2: 51, y2: 22 },
+      { k: 'line', x1: 41, y1: 30, x2: 51, y2: 30 },
+      { k: 'line', x1: 41, y1: 38, x2: 51, y2: 38 },
+      { k: 'line', x1: 20, y1: 52, x2: 30, y2: 52 },
+      { k: 'line', x1: 41, y1: 52, x2: 51, y2: 52 }
+    ],
+    terminal: [
+      { k: 'rect', x: 8, y: 8, w: 54, h: 34, r: 2 },
+      { k: 'rect', x: 28, y: 42, w: 14, h: 12, r: 1 },
+      { k: 'rect', x: 18, y: 54, w: 34, h: 8, r: 2 },
+      { k: 'line', x1: 16, y1: 18, x2: 52, y2: 18 },
+      { k: 'line', x1: 16, y1: 26, x2: 40, y2: 26 }
+    ],
+    printer: [
+      { k: 'rect', x: 10, y: 24, w: 50, h: 24, r: 3 },
+      { k: 'rect', x: 20, y: 10, w: 30, h: 14, r: 1 },
+      { k: 'rect', x: 20, y: 38, w: 30, h: 20, r: 1 },
+      { k: 'circle', cx: 17, cy: 31, r: 1.8 }
+    ],
+    ai: [
+      { k: 'rect', x: 15, y: 15, w: 40, h: 40, r: 5 },
+      { k: 'rect', x: 24, y: 24, w: 22, h: 22, r: 2 },
+      { k: 'line', x1: 25, y1: 15, x2: 25, y2: 6 }, { k: 'line', x1: 35, y1: 15, x2: 35, y2: 6 }, { k: 'line', x1: 45, y1: 15, x2: 45, y2: 6 },
+      { k: 'line', x1: 25, y1: 55, x2: 25, y2: 64 }, { k: 'line', x1: 35, y1: 55, x2: 35, y2: 64 }, { k: 'line', x1: 45, y1: 55, x2: 45, y2: 64 },
+      { k: 'line', x1: 15, y1: 25, x2: 6, y2: 25 }, { k: 'line', x1: 15, y1: 35, x2: 6, y2: 35 }, { k: 'line', x1: 15, y1: 45, x2: 6, y2: 45 },
+      { k: 'line', x1: 55, y1: 25, x2: 64, y2: 25 }, { k: 'line', x1: 55, y1: 35, x2: 64, y2: 35 }, { k: 'line', x1: 55, y1: 45, x2: 64, y2: 45 },
+      { k: 'text', x: 35, y: 40, s: 'AI', size: 12, w: 700 }
+    ]
+  };
+
+  var ICON_LABEL = {
+    server: '서버', pc: 'PC·단말', mobile: '모바일', camera: '카메라', sensor: '센서·계측기',
+    plc: 'PLC·RTU', meter: '계량기', gateway: '게이트웨이', cloud: '클라우드', db: 'DB 서버',
+    storage: '저장소·NAS', switch: '스위치·허브', firewall: '방화벽', ups: 'UPS·전원',
+    aircon: '공조', inverter: 'PCS·인버터', terminal: '키오스크·단말', printer: '프린터', ai: 'AI·연산'
+  };
+
+  /* ── 2. 프리셋 ─────────────────────────────────────────────────────── */
+  var PRESETS = {
+    web: {
+      productName: '○○ 업무포털',
+      version: 'V2.0',
+      subtitle: '제품설명서 · 설치 구성도',
+      nodes: [
+        { id: 'pc1', name: '운영자 PC', icon: 'pc', pos: 'top', model: 'Windows 11 23H2 · Chrome 120', vendor: '', sw: [], otherSw: [] },
+        { id: 'pc2', name: '사용자 PC', icon: 'pc', pos: 'top', model: 'Windows 10 22H2 · Edge 120', vendor: '', sw: [], otherSw: [] },
+        { id: 'mb1', name: '모바일 웹', icon: 'mobile', pos: 'top', model: 'iOS 17 · Safari', vendor: '', sw: [], otherSw: [] },
+        { id: 'srv', name: '업무 서버', icon: 'server', pos: 'center', model: '', vendor: '',
+          sw: ['○○ 업무포털 V2.0', '○○ 관리콘솔 V2.0'],
+          otherSw: ['- Ubuntu 22.04 LTS 64bit', '- PostgreSQL 15.4'] },
+        { id: 'nas', name: '첨부파일 저장소', icon: 'storage', pos: 'bottom', model: 'NAS 24TB', vendor: '○○스토리지', sw: [], otherSw: [] },
+        { id: 'bkp', name: '백업 서버', icon: 'server', pos: 'bottom', model: 'RS-4500', vendor: '○○서버', sw: [], otherSw: [] }
+      ],
+      links: [
+        { from: 'pc1', to: 'srv', protocol: 'HTTPS' },
+        { from: 'pc2', to: 'srv', protocol: 'HTTPS' },
+        { from: 'mb1', to: 'srv', protocol: 'HTTPS' },
+        { from: 'srv', to: 'nas', protocol: 'SMB' },
+        { from: 'srv', to: 'bkp', protocol: 'SSH' }
+      ]
+    },
+    iot: {
+      productName: '○○ 관제 시스템',
+      version: 'V1.0',
+      subtitle: '제품설명서 · 설치 구성도',
+      nodes: [
+        { id: 'cam1', name: 'CCTV 카메라', icon: 'camera', pos: 'top', model: 'AB-100', vendor: '○○시스템', sw: [], otherSw: [] },
+        { id: 'tmp1', name: '온도센서', icon: 'sensor', pos: 'top', model: 'TS-250', vendor: '○○계측', sw: [], otherSw: [] },
+        { id: 'plc1', name: 'PLC', icon: 'plc', pos: 'top', model: 'MP-2000', vendor: '○○오토메이션', sw: [], otherSw: [] },
+        { id: 'mtr1', name: '전력량계', icon: 'meter', pos: 'top', model: 'EM-30', vendor: '○○전기', sw: [], otherSw: [] },
+        { id: 'srv', name: '관제 서버', icon: 'server', pos: 'center', model: '', vendor: '',
+          sw: ['○○ 관제 엔진 V1.0', '○○ 관제 뷰어 V1.0'],
+          otherSw: ['- Ubuntu 24.04.4 LTS 64bit', '- MariaDB 10.11'] },
+        { id: 'op1', name: '운영 단말', icon: 'pc', pos: 'bottom', model: 'Windows 11 23H2', vendor: '', sw: [], otherSw: [] },
+        { id: 'ac1', name: '공조 제어기', icon: 'aircon', pos: 'bottom', model: 'AC-500', vendor: '○○공조', sw: [], otherSw: [] }
+      ],
+      links: [
+        { from: 'cam1', to: 'srv', protocol: 'RTSP' },
+        { from: 'tmp1', to: 'srv', protocol: 'Modbus TCP' },
+        { from: 'plc1', to: 'srv', protocol: 'Modbus TCP' },
+        { from: 'mtr1', to: 'srv', protocol: 'Modbus TCP' },
+        { from: 'srv', to: 'op1', protocol: 'HTTPS' },
+        { from: 'srv', to: 'ac1', protocol: 'Modbus TCP' }
+      ]
+    }
+  };
+
+  /* ── 3. 상태 ───────────────────────────────────────────────────────── */
+  var state = {
+    productName: '', version: '', subtitle: '',
+    nodes: [], links: [],
+    showModels: true, showSw: true, showLegend: true, showTitle: true,
+    linkColor: '#2e9e4f'
+  };
+  var uid = 1;
+  function newId() { return 'n' + (uid++); }
+
+  /* ── 4. 텍스트 측정 ───────────────────────────────────────────────── */
+  function charW(ch) {
+    var c = ch.charCodeAt(0);
+    if (c < 128) return 0.54;
+    if (c >= 0xAC00 && c <= 0xD7A3) return 1.0;
+    if (c >= 0x3130 && c <= 0x318F) return 0.95;
+    if (c >= 0x30A0 && c <= 0x30FF) return 1.0;
+    return 0.9;
+  }
+  function tw(text, size, bold) {
+    var t = String(text || ''), w = 0;
+    for (var i = 0; i < t.length; i++) w += charW(t[i]);
+    return w * size * (bold ? 1.045 : 1);
+  }
+  function wrapText(text, size, maxW) {
+    var out = [], cur = '';
+    for (var i = 0; i < String(text).length; i++) {
+      var ch = String(text)[i];
+      if (ch === '\n') { out.push(cur); cur = ''; continue; }
+      if (tw(cur + ch, size) > maxW && cur) { out.push(cur); cur = ch; }
+      else cur += ch;
+    }
+    if (cur) out.push(cur);
+    return out;
+  }
+
+  /* ── 5. 레이아웃 계산 ─────────────────────────────────────────────── */
+  function byId(id) { for (var i = 0; i < state.nodes.length; i++) if (state.nodes[i].id === id) return state.nodes[i]; return null; }
+
+  function detailLines(node) {
+    var out = [];
+    if (state.showModels) {
+      if (node.model) out.push({ text: node.model, size: 14, color: GRAY, weight: 400, center: true });
+      if (node.vendor) out.push({ text: '(' + node.vendor + ')', size: 13, color: GRAY, weight: 400, center: true });
+    }
+    return out;
+  }
+
+  function compose() {
+    var geo = { W: W, H: H, title: null, cards: [], links: [], legend: null };
+    var server = null, i;
+    for (i = 0; i < state.nodes.length; i++) if (state.nodes[i].pos === 'center') { server = state.nodes[i]; break; }
+    if (!server) for (i = 0; i < state.nodes.length; i++) if (state.nodes[i].icon === 'server') { server = state.nodes[i]; break; }
+    if (!server && state.nodes.length) server = state.nodes[0];
+
+    var cy = 455;
+    // 서버 카드
+    var sCard = null;
+    if (server && server.pos !== 'left' && server.pos !== 'right') {
+      var swLines = (state.showSw ? (server.sw || []) : []).map(function (s) { return { text: s, size: 15, color: INK, weight: 600, center: true }; });
+      var otherLines = (state.showSw ? (server.otherSw || []) : []).map(function (s) { return { text: s, size: 14, color: GRAY, weight: 400, center: false }; });
+      var nameTop = PAD + ICON + 8;
+      var gsTop, gsH;
+      if (swLines.length) {
+        gsTop = nameTop + 30 + 10;
+        gsH = 22 + swLines.length * 22 + 12;
+      } else {
+        // SW를 숨긴 '객체명만' 버전에서도 GS인증 범위 표시는 남긴다(서버 이름을 감싼다)
+        gsTop = nameTop - 6;
+        gsH = 40;
+      }
+      var otherTop = otherLines.length ? gsTop + gsH + 12 : gsTop + gsH;
+      var h = otherLines.length ? otherTop + otherLines.length * 21 + PAD - 4 : gsTop + gsH + PAD - 2;
+      sCard = {
+        node: server, server: true, w: SRV_W, h: Math.max(h, 132),
+        x: (W - SRV_W) / 2, y: cy - Math.max(h, 132) / 2,
+        nameTop: nameTop,
+        swLines: swLines, otherLines: otherLines, gsRel: { x: PAD, y: gsTop, w: SRV_W - 2 * PAD, h: gsH }, otherTop: otherTop
+      };
+      geo.cards.push(sCard);
+    }
+
+    // 장비 카드들
+    var groups = { top: [], bottom: [], left: [], right: [] };
+    state.nodes.forEach(function (n) {
+      if (sCard && n === server) return;
+      if (n.pos === 'center') { groups.top.push(n); return; }
+      (groups[n.pos] || groups.top).push(n);
+    });
+
+    function buildCard(n) {
+      var nameLines = wrapText(n.name || '(이름 없음)', 19, CARD_W - PAD * 2);
+      if (nameLines.length > 2) nameLines = [nameLines[0], nameLines[1]];
+      var det = detailLines(n);
+      var nameTop = PAD + ICON + 8;
+      var h = nameTop + nameLines.length * 25 + (det.length ? 4 + det.length * 19 : 0) + (PAD - 2);
+      return { node: n, server: false, w: CARD_W, h: Math.max(h, 148), nameTop: nameTop, nameLines: nameLines, details: det };
+    }
+
+    function layoutRow(list, align) {              // align: 'top' | 'bottom'
+      if (!list.length) return;
+      var cards = list.map(buildCard);
+      // 이웃한 카드끼리 직접 연결(peer)이 있으면 라벨이 들어갈 만큼 간격을 벌린다
+      var gaps = [];
+      for (var gi = 0; gi < cards.length - 1; gi++) {
+        var g = GAP;
+        state.links.forEach(function (l) {
+          var f = l.from, t = l.to;
+          var A = cards[gi].node.id, B = cards[gi + 1].node.id;
+          if ((f === A && t === B) || (f === B && t === A)) {
+            g = Math.max(g, tw(l.protocol || '', 16, true) + 80);
+          }
+        });
+        gaps.push(g);
+      }
+      var total = cards.reduce(function (a, c) { return a + c.w; }, 0) + gaps.reduce(function (a, b) { return a + b; }, 0);
+      var maxAllowed = W - 120;
+      if (total > maxAllowed) { gaps = gaps.map(function () { return GAP; }); total = cards.reduce(function (a, c) { return a + c.w; }, 0) + GAP * (cards.length - 1); }
+      var x = (W - total) / 2;
+      var maxH = Math.max.apply(null, cards.map(function (c) { return c.h; }));
+      var baseY = align === 'top' ? (sCard ? sCard.y - 62 : AREA_BOTTOM) : (sCard ? sCard.y + sCard.h + 62 : AREA_TOP);
+      cards.forEach(function (c, i) {
+        c.x = x; x += c.w + (gaps[i] === undefined ? 0 : gaps[i]);
+        c.y = align === 'top' ? baseY - c.h : baseY;
+        geo.cards.push(c);
+      });
+    }
+    layoutRow(groups.top, 'top');
+    layoutRow(groups.bottom, 'bottom');
+
+    // 좌우 배치(있을 때만)
+    ['left', 'right'].forEach(function (side) {
+      var list = groups[side]; if (!list.length) return;
+      var cards = list.map(buildCard);
+      var gap = 22, total = cards.reduce(function (a, c) { return a + c.h; }, 0) + gap * (cards.length - 1);
+      var y = cy - total / 2;
+      cards.forEach(function (c) {
+        c.x = side === 'left' ? 56 : W - 56 - c.w;
+        c.y = y; y += c.h + gap;
+        geo.cards.push(c);
+      });
+    });
+
+    // 연결선
+    var serverCard = sCard;
+    function edgePoint(card, tx, ty) {
+      var cx = card.x + card.w / 2, cy = card.y + card.h / 2;
+      var dx = tx - cx, dy = ty - cy;
+      if (!dx && !dy) return { x: cx, y: cy };
+      var sx = dx ? (card.w / 2) / Math.abs(dx) : Infinity;
+      var sy = dy ? (card.h / 2) / Math.abs(dy) : Infinity;
+      var s = Math.min(sx, sy);
+      return { x: cx + dx * s, y: cy + dy * s };
+    }
+    function cardOf(node) {
+      for (var i = 0; i < geo.cards.length; i++) if (geo.cards[i].node === node) return geo.cards[i];
+      return null;
+    }
+    if (serverCard) {
+      var usedTop = 0, usedBottom = 0, usedLeft = 0, usedRight = 0;
+      var topLinks = [], bottomLinks = [], leftLinks = [], rightLinks = [];
+      state.links.forEach(function (l) {
+        var a = byId(l.from), b = byId(l.to);
+        if (!a || !b || a === b) return;
+        var other, dir;
+        if (a === server) { other = b; dir = 'out'; } else if (b === server) { other = a; dir = 'in'; } else { other = b; dir = 'peer'; }
+        var card = cardOf(other);
+        if (!card) return;
+        if (dir === 'peer') {
+          var cardA = cardOf(a), cardB = cardOf(b);
+          if (!cardA || !cardB) return;
+          var ca = { x: cardA.x + cardA.w / 2, y: cardA.y + cardA.h / 2 };
+          var cb = { x: cardB.x + cardB.w / 2, y: cardB.y + cardB.h / 2 };
+          var pa = edgePoint(cardA, cb.x, cb.y), pb = edgePoint(cardB, ca.x, ca.y);
+          geo.links.push({ x1: pa.x, y1: pa.y, x2: pb.x, y2: pb.y, protocol: l.protocol || '', a: l.from, b: l.to, tilt: 0 });
+          return;
+        }
+        var side = card.node.pos === 'center' ? 'top' : card.node.pos;
+        var item = { link: l, card: card, dir: dir };
+        if (side === 'top') topLinks.push(item);
+        else if (side === 'bottom') bottomLinks.push(item);
+        else if (side === 'left') leftLinks.push(item);
+        else rightLinks.push(item);
+      });
+      function distribute(n, count, from, span, margin) {
+        if (count <= 1) return [from + span / 2];
+        var m = margin || 60, out = [];
+        for (var i = 0; i < count; i++) out.push(from + m + (span - m * 2) * i / (count - 1));
+        return out;
+      }
+      function attach(list, pts) {
+        list.forEach(function (it, i) {
+          var p = pts[i];
+          var card = it.card, x1, y1, x2, y2;
+          if (it.card.node.pos === 'top') { x1 = card.x + card.w / 2; y1 = card.y + card.h; x2 = p; y2 = serverCard.y; }
+          else if (it.card.node.pos === 'bottom') { x1 = card.x + card.w / 2; y1 = card.y; x2 = p; y2 = serverCard.y + serverCard.h; }
+          else if (it.card.node.pos === 'left') { x1 = card.x + card.w; y1 = card.y + card.h / 2; x2 = serverCard.x; y2 = p; }
+          else { x1 = card.x; y1 = card.y + card.h / 2; x2 = serverCard.x + serverCard.w; y2 = p; }
+          geo.links.push({ x1: x1, y1: y1, x2: x2, y2: y2, protocol: it.link.protocol || '', a: it.link.from, b: it.link.to, tilt: (i % 2 ? 1 : -1) });
+        });
+      }
+      attach(topLinks, distribute(null, topLinks.length, serverCard.x, serverCard.w, 70));
+      attach(bottomLinks, distribute(null, bottomLinks.length, serverCard.x, serverCard.w, 70));
+      attach(leftLinks, distribute(null, leftLinks.length, serverCard.y, serverCard.h, 40));
+      attach(rightLinks, distribute(null, rightLinks.length, serverCard.y, serverCard.h, 40));
+    } else {
+      // 서버가 없으면 노드끼리 최소한의 연결만 그린다
+      state.links.forEach(function (l) {
+        var a = geo.cards.filter(function (c) { return c.node.id === l.from; })[0];
+        var b = geo.cards.filter(function (c) { return c.node.id === l.to; })[0];
+        if (!a || !b) return;
+        geo.links.push({
+          x1: a.x + a.w / 2, y1: a.y + a.h / 2, x2: b.x + b.w / 2, y2: b.y + b.h / 2,
+          protocol: l.protocol || '', a: l.from, b: l.to, tilt: 0
+        });
+      });
+    }
+
+    // 연결선 라벨 (겹치면 선 위 위치를 밀어서 배치)
+    var placed = [];
+    geo.links.forEach(function (ln, idx) {
+      if (!ln.protocol) return;
+      var w = tw(ln.protocol, 16, true) + 22, h = 30;
+      var ts = [0.5, 0.42, 0.58, 0.34, 0.66, 0.27, 0.73], best = null;
+      for (var k = 0; k < ts.length; k++) {
+        var t = ts[k];
+        var x = ln.x1 + (ln.x2 - ln.x1) * t - w / 2;
+        var y = ln.y1 + (ln.y2 - ln.y1) * t - h / 2;
+        var box = { x: x, y: y, w: w, h: h };
+        var hit = placed.some(function (p) { return !(box.x + box.w < p.x - 4 || box.x > p.x + p.w + 4 || box.y + box.h < p.y - 4 || box.y > p.y + p.h + 4); });
+        if (!hit) { best = box; break; }
+      }
+      if (!best) {
+        var t2 = 0.5;
+        best = { x: ln.x1 + (ln.x2 - ln.x1) * t2 - w / 2, y: ln.y1 + (ln.y2 - ln.y1) * t2 - h / 2, w: w, h: h };
+      }
+      placed.push(best);
+      ln.label = best;
+    });
+
+    // 제목
+    var titleText = (state.productName || '제품명') + (state.version ? ' ' + state.version : '') + ' 설치 구성도';
+    geo.title = {
+      text: titleText,
+      sub: state.subtitle || '',
+      x: 64, y: 34
+    };
+
+    // 범례
+    geo.legend = { x: 64, y: H - 62 };
+    return geo;
+  }
+
+  /* ── 6. SVG 렌더 ──────────────────────────────────────────────────── */
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function iconSVG(icon, ox, oy, scale, color) {
+    var parts = ICONS[icon] || ICONS.server, s = '';
+    parts.forEach(function (p) {
+      if (p.k === 'rect') {
+        s += '<rect x="' + (ox + p.x * scale) + '" y="' + (oy + p.y * scale) + '" width="' + (p.w * scale) + '" height="' + (p.h * scale) + '" rx="' + ((p.r || 0) * scale) + '"/>';
+      } else if (p.k === 'line') {
+        s += '<line x1="' + (ox + p.x1 * scale) + '" y1="' + (oy + p.y1 * scale) + '" x2="' + (ox + p.x2 * scale) + '" y2="' + (oy + p.y2 * scale) + '"/>';
+      } else if (p.k === 'circle') {
+        s += '<circle cx="' + (ox + p.cx * scale) + '" cy="' + (oy + p.cy * scale) + '" r="' + (p.r * scale) + '"/>';
+      } else if (p.k === 'ellipse') {
+        s += '<ellipse cx="' + (ox + (p.x + p.w / 2) * scale) + '" cy="' + (oy + (p.y + p.h / 2) * scale) + '" rx="' + (p.w / 2 * scale) + '" ry="' + (p.h / 2 * scale) + '"/>';
+      } else if (p.k === 'poly') {
+        s += '<polygon points="' + p.pts.map(function (pt) { return (ox + pt[0] * scale) + ',' + (oy + pt[1] * scale); }).join(' ') + '"/>';
+      } else if (p.k === 'text') {
+        s += '<text x="' + (ox + p.x * scale) + '" y="' + (oy + p.y * scale) + '" text-anchor="middle" font-size="' + (p.size * scale) + '" font-weight="' + p.w + '" stroke="none" fill="' + color + '" font-family="' + FONT + '">' + esc(p.s) + '</text>';
+      }
+    });
+    return '<g fill="none" stroke="' + color + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' + s + '</g>';
+  }
+
+  function renderSVG(geo) {
+    var o = [];
+    var lc = state.linkColor || '#2e9e4f';
+    o.push('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" font-family="' + FONT + '">');
+    o.push('<defs>');
+    o.push('<marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="' + lc + '"/></marker>');
+    o.push('</defs>');
+    o.push('<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#ffffff"/>');
+
+    if (state.showTitle && geo.title) {
+      o.push('<text x="' + geo.title.x + '" y="' + (geo.title.y + 24) + '" font-size="26" font-weight="700" fill="' + INK + '">' + esc(geo.title.text) + '</text>');
+      if (geo.title.sub) o.push('<text x="' + geo.title.x + '" y="' + (geo.title.y + 50) + '" font-size="15" fill="' + GRAY + '">' + esc(geo.title.sub) + '</text>');
+    }
+
+    // 카드
+    geo.cards.forEach(function (c) {
+      o.push('<rect x="' + c.x + '" y="' + c.y + '" width="' + c.w + '" height="' + c.h + '" rx="10" fill="#ffffff" stroke="' + LINE_CARD + '" stroke-width="1.4"/>');
+      var cx = c.x + c.w / 2;
+      var iy = c.y + PAD;
+      o.push(iconSVG(c.node.icon, cx - ICON / 2, iy, ICON / 70, '#37474f'));
+      var ty = c.y + (c.nameTop || (PAD + ICON + 8));
+      if (c.server) {
+        var g = c.gsRel;
+        o.push('<rect x="' + (c.x + g.x) + '" y="' + (c.y + g.y) + '" width="' + g.w + '" height="' + g.h + '" rx="6" fill="none" stroke="' + RED + '" stroke-width="2.6" stroke-dasharray="10 6"/>');
+        o.push('<text x="' + cx + '" y="' + (ty + 21) + '" text-anchor="middle" font-size="20" font-weight="700" fill="' + INK + '">' + esc(c.node.name) + '</text>');
+        o.push('<rect x="' + (c.x + g.x + 12) + '" y="' + (c.y + g.y - 11) + '" width="' + (tw('GS인증 범위', 13, true) + 14) + '" height="21" rx="4" fill="#ffffff"/>');
+        o.push('<text x="' + (c.x + g.x + 19) + '" y="' + (c.y + g.y + 4) + '" font-size="13" font-weight="700" fill="' + RED + '">GS인증 범위</text>');
+        c.swLines.forEach(function (ln, i) {
+          o.push('<text x="' + cx + '" y="' + (c.y + g.y + 34 + i * 22) + '" text-anchor="middle" font-size="15" font-weight="600" fill="' + INK + '">' + esc(ln.text) + '</text>');
+        });
+        c.otherLines.forEach(function (ln, i) {
+          o.push('<text x="' + cx + '" y="' + (c.y + c.otherTop + 16 + i * 21) + '" text-anchor="middle" font-size="14" fill="' + GRAY + '">' + esc(ln.text) + '</text>');
+        });
+      } else {
+        c.nameLines.forEach(function (ln, i) {
+          o.push('<text x="' + cx + '" y="' + (ty + 20 + i * 25) + '" text-anchor="middle" font-size="19" font-weight="700" fill="' + INK + '">' + esc(ln) + '</text>');
+        });
+        var dy = ty + c.nameLines.length * 25 + 18;
+        c.details.forEach(function (d, i) {
+          o.push('<text x="' + cx + '" y="' + (dy + i * 19) + '" text-anchor="middle" font-size="' + d.size + '" fill="' + d.color + '">' + esc(d.text) + '</text>');
+        });
+      }
+    });
+
+    // 연결선 (양방향)
+    geo.links.forEach(function (ln) {
+      o.push('<line x1="' + ln.x1 + '" y1="' + ln.y1 + '" x2="' + ln.x2 + '" y2="' + ln.y2 + '" stroke="' + lc + '" stroke-width="2.4" stroke-linecap="round" marker-start="url(#arw)" marker-end="url(#arw)"/>');
+    });
+    // 프로토콜 라벨
+    geo.links.forEach(function (ln) {
+      if (!ln.label) return;
+      var b = ln.label;
+      o.push('<rect x="' + b.x + '" y="' + b.y + '" width="' + b.w + '" height="' + b.h + '" rx="5" fill="#ffffff"/>');
+      o.push('<text x="' + (b.x + b.w / 2) + '" y="' + (b.y + b.h / 2 + 5.5) + '" text-anchor="middle" font-size="16" font-weight="700" fill="' + lc + '">' + esc(ln.protocol) + '</text>');
+    });
+
+    // 범례
+    if (state.showLegend) {
+      var lx = geo.legend.x, ly = geo.legend.y;
+      var i1 = '구성요소 간 통신 (양방향)';
+      o.push('<text x="' + lx + '" y="' + (ly - 16) + '" font-size="13" font-weight="700" fill="' + GRAY + '">범례</text>');
+      o.push('<line x1="' + lx + '" y1="' + ly + '" x2="' + (lx + 54) + '" y2="' + ly + '" stroke="' + lc + '" stroke-width="2.4" marker-start="url(#arw)" marker-end="url(#arw)"/>');
+      o.push('<text x="' + (lx + 66) + '" y="' + (ly + 5) + '" font-size="14" fill="' + INK + '">' + esc(i1) + '</text>');
+      var gx2 = lx + 66 + tw(i1, 14) + 46;
+      o.push('<rect x="' + gx2 + '" y="' + (ly - 12) + '" width="46" height="24" rx="4" fill="none" stroke="' + RED + '" stroke-width="2.4" stroke-dasharray="9 5"/>');
+      o.push('<text x="' + (gx2 + 58) + '" y="' + (ly + 5) + '" font-size="14" fill="' + INK + '">GS인증 범위</text>');
+    }
+    o.push('</svg>');
+    return o.join('');
+  }
+
+  /* ── 7. PPTX 내보내기 ─────────────────────────────────────────────── */
+  function inch(px) { return px / 120; }
+
+  function addIconPPTX(pptx, slide, icon, ox, oy, scale, color) {
+    var parts = ICONS[icon] || ICONS.server;
+    var lw = 2.2 * PXPT;
+    parts.forEach(function (p) {
+      var base = { line: { color: color, width: lw }, fill: { color: 'FFFFFF', transparency: 100 } };
+      if (p.k === 'rect') {
+        var st = (p.r ? pptx.ShapeType.roundRect : pptx.ShapeType.rect);
+        slide.addShape(st, Object.assign({}, base, {
+          x: inch(ox + p.x * scale), y: inch(oy + p.y * scale),
+          w: inch(p.w * scale), h: inch(p.h * scale),
+          rectRadius: p.r ? inch(p.r * scale) : undefined
+        }));
+      } else if (p.k === 'line' || (p.k === 'poly' && !p.close)) {
+        var segs = p.k === 'line' ? [[p.x1, p.y1, p.x2, p.y2]] : p.pts.map(function (pt, i) {
+          var q = p.pts[i + 1]; return q ? [pt[0], pt[1], q[0], q[1]] : null;
+        }).filter(Boolean);
+        segs.forEach(function (s) { addLinePPTX(pptx, slide, ox + s[0] * scale, oy + s[1] * scale, ox + s[2] * scale, oy + s[3] * scale, color, lw); });
+      } else if (p.k === 'poly' && p.close) {
+        var pts = p.pts.map(function (pt) { return { x: ox + pt[0] * scale, y: oy + pt[1] * scale }; });
+        for (var i = 0; i < pts.length; i++) {
+          var q = pts[(i + 1) % pts.length];
+          addLinePPTX(pptx, slide, pts[i].x, pts[i].y, q.x, q.y, color, lw);
+        }
+      } else if (p.k === 'circle') {
+        slide.addShape(pptx.ShapeType.ellipse, Object.assign({}, base, {
+          x: inch(ox + (p.cx - p.r) * scale), y: inch(oy + (p.cy - p.r) * scale),
+          w: inch(2 * p.r * scale), h: inch(2 * p.r * scale)
+        }));
+      } else if (p.k === 'ellipse') {
+        slide.addShape(pptx.ShapeType.ellipse, Object.assign({}, base, {
+          x: inch(ox + p.x * scale), y: inch(oy + p.y * scale),
+          w: inch(p.w * scale), h: inch(p.h * scale)
+        }));
+      } else if (p.k === 'text') {
+        slide.addText(p.s, {
+          x: inch(ox + (p.x - 20) * scale), y: inch(oy + (p.y - 10) * scale),
+          w: inch(40 * scale), h: inch(20 * scale),
+          fontFace: 'Malgun Gothic', fontSize: p.size * scale * PXPT, bold: true,
+          color: color, align: 'center', valign: 'middle', margin: 0
+        });
+      }
+    });
+  }
+
+  function addLinePPTX(pptx, slide, x1, y1, x2, y2, color, widthPt, arrows) {
+    var x = Math.min(x1, x2), y = Math.min(y1, y2);
+    var o = {
+      x: inch(x), y: inch(y), w: inch(Math.abs(x2 - x1)), h: inch(Math.abs(y2 - y1)),
+      line: { color: color, width: widthPt },
+      flipH: x2 < x1, flipV: y2 < y1
+    };
+    if (arrows) { o.line.beginArrowType = 'triangle'; o.line.endArrowType = 'triangle'; }
+    if (o.w === 0) o.w = 0.0008;
+    if (o.h === 0) o.h = 0.0008;
+    slide.addShape(pptx.ShapeType.line, o);
+  }
+
+  function buildPPTX() {
+    var PptxGenJS = window.PptxGenJS;
+    if (!PptxGenJS) throw new Error('PPTX 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.');
+    var pptx = new PptxGenJS();
+    pptx.defineLayout({ name: 'GS16x9', width: inch(W), height: inch(H) });
+    pptx.layout = 'GS16x9';
+    pptx.author = 'GS인증 설치 구성도 빌더 (비공식)';
+    pptx.title = (state.productName || '') + ' 설치 구성도';
+
+    var geo = compose();
+    var slide = pptx.addSlide();
+    slide.background = { color: 'FFFFFF' };
+    var lc = (state.linkColor || '#2e9e4f').replace('#', '').toUpperCase();
+    var fonts = 'Malgun Gothic';
+
+    if (state.showTitle) {
+      slide.addText(geo.title.text, {
+        x: inch(geo.title.x), y: inch(geo.title.y), w: inch(1000), h: inch(34),
+        fontFace: fonts, fontSize: 26 * PXPT, bold: true, color: '263238', margin: 0, valign: 'middle'
+      });
+      if (geo.title.sub) {
+        slide.addText(geo.title.sub, {
+          x: inch(geo.title.x), y: inch(geo.title.y + 34), w: inch(1000), h: inch(24),
+          fontFace: fonts, fontSize: 15 * PXPT, color: '607D8B', margin: 0, valign: 'middle'
+        });
+      }
+    }
+
+    // 카드 + 아이콘 + 텍스트
+    geo.cards.forEach(function (c) {
+      slide.addShape(pptx.ShapeType.roundRect, {
+        x: inch(c.x), y: inch(c.y), w: inch(c.w), h: inch(c.h),
+        rectRadius: inch(10), fill: { color: 'FFFFFF' }, line: { color: '90A4AE', width: 1.4 * PXPT }
+      });
+      var cx = c.x + c.w / 2, iy = c.y + PAD;
+      addIconPPTX(pptx, slide, c.node.icon, cx - ICON / 2, iy, ICON / 70, '37474F');
+      var ty = c.y + (c.nameTop || (PAD + ICON + 8));
+
+      if (c.server) {
+        var g = c.gsRel;
+        slide.addShape(pptx.ShapeType.roundRect, {
+          x: inch(c.x + g.x), y: inch(c.y + g.y), w: inch(g.w), h: inch(g.h), rectRadius: inch(6),
+          fill: { color: 'FFFFFF', transparency: 100 },
+          line: { color: 'E53935', width: 2.6 * PXPT, dashType: 'dash' }
+        });
+        slide.addText(c.node.name, {
+          x: inch(c.x + PAD), y: inch(ty), w: inch(c.w - 2 * PAD), h: inch(28),
+          fontFace: fonts, fontSize: 20 * PXPT, bold: true, color: '263238', align: 'center', valign: 'middle', margin: 0
+        });
+        slide.addText('GS인증 범위', {
+          x: inch(c.x + g.x + 10), y: inch(c.y + g.y - 11), w: inch(tw('GS인증 범위', 13, true) + 16), h: inch(21),
+          fontFace: fonts, fontSize: 13 * PXPT, bold: true, color: 'E53935', align: 'center', valign: 'middle',
+          margin: 0, fill: { color: 'FFFFFF' }
+        });
+        c.swLines.forEach(function (ln, i) {
+          slide.addText(ln.text, {
+            x: inch(c.x + g.x + 8), y: inch(c.y + g.y + 12 + i * 22), w: inch(g.w - 16), h: inch(21),
+            fontFace: fonts, fontSize: 15 * PXPT, bold: true, color: '263238', align: 'center', valign: 'middle', margin: 0
+          });
+        });
+        c.otherLines.forEach(function (ln, i) {
+          slide.addText(ln.text, {
+            x: inch(c.x + PAD), y: inch(c.y + c.otherTop + i * 21), w: inch(c.w - 2 * PAD), h: inch(20),
+            fontFace: fonts, fontSize: 14 * PXPT, color: '607D8B', align: 'center', valign: 'middle', margin: 0
+          });
+        });
+      } else {
+        c.nameLines.forEach(function (ln, i) {
+          slide.addText(ln, {
+            x: inch(c.x + PAD), y: inch(ty + i * 25), w: inch(c.w - 2 * PAD), h: inch(24),
+            fontFace: fonts, fontSize: 19 * PXPT, bold: true, color: '263238', align: 'center', valign: 'middle', margin: 0
+          });
+        });
+        var dy = ty + c.nameLines.length * 25 + 14;
+        c.details.forEach(function (d, i) {
+          slide.addText(d.text, {
+            x: inch(c.x + PAD), y: inch(dy + i * 19), w: inch(c.w - 2 * PAD), h: inch(18),
+            fontFace: fonts, fontSize: d.size * PXPT, color: '607D8B', align: 'center', valign: 'middle', margin: 0
+          });
+        });
+      }
+    });
+
+    // 연결선(양방향 화살표) — 카드 위에 그려야 화살촉이 보인다
+    geo.links.forEach(function (ln) {
+      addLinePPTX(pptx, slide, ln.x1, ln.y1, ln.x2, ln.y2, lc, 2.4 * PXPT, true);
+    });
+    geo.links.forEach(function (ln) {
+      if (!ln.label) return;
+      var b = ln.label;
+      slide.addShape(pptx.ShapeType.roundRect, {
+        x: inch(b.x), y: inch(b.y), w: inch(b.w), h: inch(b.h), rectRadius: inch(5),
+        fill: { color: 'FFFFFF' }, line: { color: 'FFFFFF', width: 0.5 }
+      });
+      slide.addText(ln.protocol, {
+        x: inch(b.x), y: inch(b.y), w: inch(b.w), h: inch(b.h),
+        fontFace: fonts, fontSize: 16 * PXPT, bold: true, color: lc, align: 'center', valign: 'middle', margin: 0
+      });
+    });
+
+    // 범례
+    if (state.showLegend) {
+      var lx = geo.legend.x, ly = geo.legend.y, i1 = '구성요소 간 통신 (양방향)';
+      slide.addText('범례', { x: inch(lx), y: inch(ly - 30), w: inch(60), h: inch(18), fontFace: fonts, fontSize: 13 * PXPT, bold: true, color: '607D8B', margin: 0 });
+      addLinePPTX(pptx, slide, lx, ly, lx + 54, ly, lc, 2.4 * PXPT, true);
+      slide.addText(i1, { x: inch(lx + 64), y: inch(ly - 12), w: inch(tw(i1, 14) + 24), h: inch(24), fontFace: fonts, fontSize: 14 * PXPT, color: '263238', valign: 'middle', margin: 0 });
+      var gx2 = lx + 64 + tw(i1, 14) + 40;
+      slide.addShape(pptx.ShapeType.roundRect, {
+        x: inch(gx2), y: inch(ly - 12), w: inch(46), h: inch(24), rectRadius: inch(4),
+        fill: { color: 'FFFFFF', transparency: 100 }, line: { color: 'E53935', width: 2.4 * PXPT, dashType: 'dash' }
+      });
+      slide.addText('GS인증 범위', { x: inch(gx2 + 52), y: inch(ly - 12), w: inch(140), h: inch(24), fontFace: fonts, fontSize: 14 * PXPT, color: '263238', valign: 'middle', margin: 0 });
+    }
+    return pptx;
+  }
+
+  /* ── 8. 다운로드 도우미 ──────────────────────────────────────────── */
+  function saveBlob(blob, name) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 4000);
+  }
+  function fileBase() {
+    var s = (state.productName || 'gs-install-diagram').replace(/[\\/:*?"<>|\s]+/g, '-');
+    return s + '-설치구성도';
+  }
+  function toast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { t.classList.remove('show'); }, 2200);
+  }
+  function showErr(msg) {
+    var b = document.getElementById('errbar');
+    b.style.display = 'block'; b.textContent = msg;
+  }
+  function clearErr() { document.getElementById('errbar').style.display = 'none'; }
+
+  /* ── 9. UI 그리드 ─────────────────────────────────────────────────── */
+  var nodeListEl, linkListEl;
+
+  function iconOptions(sel) {
+    return Object.keys(ICONS).map(function (k) {
+      return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + (ICON_LABEL[k] || k) + '</option>';
+    }).join('');
+  }
+  function posOptions(sel) {
+    var L = [['center', '중앙(서버)'], ['top', '위'], ['bottom', '아래'], ['left', '왼쪽'], ['right', '오른쪽']];
+    return L.map(function (p) { return '<option value="' + p[0] + '"' + (p[0] === sel ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('');
+  }
+
+  function renderNodeList() {
+    nodeListEl.innerHTML = '';
+    state.nodes.forEach(function (n, i) {
+      var d = document.createElement('div');
+      d.className = 'node-card';
+      var swFields = n.pos === 'center'
+        ? '<label class="field" style="margin:8px 0 0"><span>인증 범위 SW (한 줄에 하나) — 빨간 점선 안</span><textarea data-f="sw" data-id="' + n.id + '" rows="2" placeholder="○○ 관제 엔진 V1.0"></textarea></label>' +
+          '<label class="field" style="margin:6px 0 0"><span>인증 범위 밖 SW (OS·DBMS)</span><textarea data-f="otherSw" data-id="' + n.id + '" rows="2" placeholder="- Ubuntu 24.04 LTS 64bit"></textarea></label>'
+        : '';
+      d.innerHTML =
+        '<div class="nc-head"><span class="idx">' + (i + 1) + '</span><span class="nm"></span>' +
+        '<button class="icon-btn" data-del-node="' + n.id + '" title="삭제">✕</button></div>' +
+        '<div class="row" style="margin-bottom:6px">' +
+        '<label class="field grow" style="margin:0"><span>객체명</span><input type="text" data-f="name" data-id="' + n.id + '"></label>' +
+        '<label class="field" style="margin:0;width:96px"><span>아이콘</span><select data-f="icon" data-id="' + n.id + '">' + iconOptions(n.icon) + '</select></label>' +
+        '<label class="field" style="margin:0;width:86px"><span>위치</span><select data-f="pos" data-id="' + n.id + '">' + posOptions(n.pos) + '</select></label>' +
+        '</div>' +
+        '<div class="small-grid">' +
+        '<label class="field" style="margin:0"><span>모델명</span><input type="text" data-f="model" data-id="' + n.id + '"></label>' +
+        '<label class="field" style="margin:0"><span>제조사</span><input type="text" data-f="vendor" data-id="' + n.id + '"></label>' +
+        '</div>' + swFields;
+      d.querySelector('.nm').textContent = n.name || '(이름 없음)';
+      ['name', 'model', 'vendor'].forEach(function (f) {
+        d.querySelector('[data-f="' + f + '"]').value = n[f] || '';
+      });
+      d.querySelector('[data-f="sw"]') && (d.querySelector('[data-f="sw"]').value = (n.sw || []).join('\n'));
+      d.querySelector('[data-f="otherSw"]') && (d.querySelector('[data-f="otherSw"]').value = (n.otherSw || []).join('\n'));
+      nodeListEl.appendChild(d);
+    });
+    document.getElementById('nodeCount').textContent = state.nodes.length + '개';
+  }
+
+  function renderLinkList() {
+    linkListEl.innerHTML = '';
+    var opts = function (sel) {
+      return state.nodes.map(function (n) {
+        return '<option value="' + n.id + '"' + (n.id === sel ? ' selected' : '') + '>' + esc(n.name || n.id) + '</option>';
+      }).join('');
+    };
+    state.links.forEach(function (l, i) {
+      var d = document.createElement('div');
+      d.className = 'link-row';
+      d.innerHTML =
+        '<select data-l="from" data-i="' + i + '">' + opts(l.from) + '</select>' +
+        '<select data-l="to" data-i="' + i + '">' + opts(l.to) + '</select>' +
+        '<input type="text" data-l="protocol" data-i="' + i + '" placeholder="HTTPS">' +
+        '<button class="icon-btn" data-del-link="' + i + '" title="삭제">✕</button>';
+      d.querySelector('[data-l="protocol"]').value = l.protocol || '';
+      linkListEl.appendChild(d);
+    });
+    document.getElementById('linkCount').textContent = state.links.length + '개';
+  }
+
+  function renderPreview() {
+    try {
+      var geo = compose();
+      document.getElementById('svgHost').innerHTML = renderSVG(geo);
+      var swCount = 0;
+      state.nodes.forEach(function (n) { swCount += (n.sw || []).length; });
+      document.getElementById('status').textContent =
+        '구성요소 ' + state.nodes.length + '개 · 연결 ' + state.links.length + '개 · 인증 범위 SW ' + swCount + '개';
+      clearErr();
+    } catch (e) {
+      showErr('미리보기를 그리지 못했습니다: ' + e.message);
+    }
+  }
+
+  function syncFields() {
+    document.getElementById('fProduct').value = state.productName;
+    document.getElementById('fVersion').value = state.version;
+    document.getElementById('fSub').value = state.subtitle;
+    document.getElementById('fModels').checked = state.showModels;
+    document.getElementById('fSw').checked = state.showSw;
+    document.getElementById('fLegend').checked = state.showLegend;
+    document.getElementById('fTitle').checked = state.showTitle;
+    document.getElementById('fColor').value = state.linkColor;
+  }
+
+  function refreshAll() { renderNodeList(); renderLinkList(); renderPreview(); }
+
+  /* ── 10. JSON 입출력 ─────────────────────────────────────────────── */
+  function toJSON() {
+    return {
+      productName: state.productName,
+      version: state.version,
+      subtitle: state.subtitle,
+      nodes: state.nodes.map(function (n) {
+        return {
+          id: n.id, name: n.name, icon: n.icon, pos: n.pos,
+          model: n.model || '', vendor: n.vendor || '',
+          sw: n.sw || [], otherSw: n.otherSw || []
+        };
+      }),
+      links: state.links.map(function (l) { return { from: l.from, to: l.to, protocol: l.protocol || '' }; })
+    };
+  }
+
+  function normalizeNode(raw, i) {
+    var n = {};
+    n.id = raw.id ? String(raw.id) : 'n' + (i + 1);
+    n.name = String(raw.name || raw.label || '구성요소 ' + (i + 1));
+    n.icon = ICONS[raw.icon] ? raw.icon : (raw.type && ICONS[raw.type] ? raw.type : 'server');
+    n.pos = ['center', 'top', 'bottom', 'left', 'right'].indexOf(raw.pos) >= 0 ? raw.pos : 'top';
+    n.model = String(raw.model || '');
+    n.vendor = String(raw.vendor || raw.maker || '');
+    n.sw = Array.isArray(raw.sw) ? raw.sw.map(String) : (raw.software ? [].concat(raw.software).map(String) : []);
+    n.otherSw = Array.isArray(raw.otherSw) ? raw.otherSw.map(String) : (raw.os ? [].concat(raw.os).map(String) : []);
+    return n;
+  }
+
+  function applyJSON(text) {
+    var data;
+    try { data = JSON.parse(text); }
+    catch (e) { throw new Error('JSON 형식이 아닙니다: ' + e.message); }
+    if (!data || typeof data !== 'object') throw new Error('JSON 객체를 넣어 주세요.');
+    var nodes = Array.isArray(data.nodes) ? data.nodes.map(normalizeNode) : null;
+    if (!nodes || !nodes.length) throw new Error('nodes 배열이 필요합니다.');
+    var ids = nodes.map(function (n) { return n.id; });
+    var links = [];
+    (Array.isArray(data.links) ? data.links : []).forEach(function (l) {
+      var f = String(l.from || l.source || ''), t = String(l.to || l.target || '');
+      if (ids.indexOf(f) >= 0 && ids.indexOf(t) >= 0) {
+        links.push({ from: f, to: t, protocol: String(l.protocol || l.label || '') });
+      }
+    });
+    var hasCenter = nodes.some(function (n) { return n.pos === 'center'; });
+    if (!hasCenter) nodes[0].pos = 'center';
+    state.productName = String(data.productName || data.product || '');
+    state.version = String(data.version || '');
+    state.subtitle = String(data.subtitle || '');
+    state.nodes = nodes;
+    state.links = links;
+    uid = nodes.length + 10;
+    return { nodes: nodes.length, links: links.length };
+  }
+
+  function promptText() {
+    return [
+      '아래 규칙으로 GS(소프트웨어 품질인증) 제품설명서에 넣을 "제품 설치 구성도" 데이터를 만들어 줘.',
+      '첨부한 제품설명서(또는 아래에 붙여넣은 제품 설명)만 근거로 쓰고, 확인되지 않은 값은 추측하지 말고 비워 둬.',
+      '결과는 설명 문장이나 코드블록 표시 없이 JSON 객체 하나만 출력해.',
+      '',
+      '[작성 규칙]',
+      '1. 구성요소는 물리적 객체 단위로 나눈다. 서버·단말·카메라·센서·PLC·스위치 같은 설치 장비가 단위이고, 한 서버에서 실행되는 프로그램은 구성요소로 만들지 않고 그 서버의 sw에 넣는다.',
+      '2. 중앙이 되는 서버 1대의 pos는 "center", 나머지는 "top" 또는 "bottom"으로 둔다. (top/bottom 각각 4개 이하로 유지)',
+      '3. icon은 다음 중 하나만: server, pc, mobile, camera, sensor, plc, meter, gateway, cloud, db, storage, switch, firewall, ups, aircon, inverter, terminal, printer, ai',
+      '4. links에는 실제 통신이 있는 연결만 넣고, protocol은 HTTP, HTTPS, RTSP, Modbus TCP, MQTT, SMB, SMTP처럼 프로토콜 이름만 쓴다. 포트 번호는 쓰지 않는다.',
+      '5. sw는 GS인증 범위에 들어가는 제품 소프트웨어 이름과 버전을 한 줄씩 적는다. 예: "○○ 관제 엔진 V1.0"',
+      '6. otherSw는 인증 범위 밖 소프트웨어(OS, DBMS 등)를 "- Ubuntu 24.04 LTS 64bit" 형식으로 적는다.',
+      '7. model과 vendor는 제품설명서 장비 표에 적힌 그대로 쓴다. 표에 없으면 빈 문자열로 두고 마지막에 알려 준다.',
+      '8. 확인되지 않은 값은 빈 문자열 또는 빈 배열로 두고, 어떤 값을 채우지 못했는지 짧게 알려 준다.',
+      '',
+      '[JSON 스키마]',
+      '{',
+      '  "productName": "제품명",',
+      '  "version": "V1.0",',
+      '  "subtitle": "제품설명서 · 설치 구성도",',
+      '  "nodes": [',
+      '    { "id": "cctv1", "name": "CCTV 카메라", "icon": "camera", "pos": "top", "model": "AB-100", "vendor": "○○시스템", "sw": [], "otherSw": [] },',
+      '    { "id": "srv", "name": "관제 서버", "icon": "server", "pos": "center", "model": "", "vendor": "",',
+      '      "sw": ["○○ 관제 엔진 V1.0", "○○ 관제 뷰어 V1.0"], "otherSw": ["- Ubuntu 24.04 LTS 64bit", "- MariaDB 10.11"] }',
+      '  ],',
+      '  "links": [',
+      '    { "from": "cctv1", "to": "srv", "protocol": "RTSP" }',
+      '  ]',
+      '}'
+    ].join('\n');
+  }
+
+  function copyText(text, okMsg) {
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); toast(okMsg); } catch (e) { toast('복사하지 못했습니다. 직접 선택해 주세요.'); }
+      ta.remove();
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast(okMsg); }, fallback);
+    } else fallback();
+  }
+
+  /* ── 11. 이벤트 ───────────────────────────────────────────────────── */
+  function loadPreset(key, quiet) {
+    var p = PRESETS[key]; if (!p) return;
+    state.productName = p.productName;
+    state.version = p.version;
+    state.subtitle = p.subtitle;
+    state.nodes = JSON.parse(JSON.stringify(p.nodes));
+    state.links = JSON.parse(JSON.stringify(p.links));
+    uid = state.nodes.length + 10;
+    syncFields(); refreshAll();
+    if (!quiet) toast('프리셋을 불러왔습니다.');
+  }
+
+  function bind() {
+    nodeListEl = document.getElementById('nodeList');
+    linkListEl = document.getElementById('linkList');
+
+    document.querySelectorAll('[data-preset]').forEach(function (b) {
+      b.addEventListener('click', function () { loadPreset(b.getAttribute('data-preset')); });
+    });
+
+    document.getElementById('fProduct').addEventListener('input', function (e) { state.productName = e.target.value; renderPreview(); });
+    document.getElementById('fVersion').addEventListener('input', function (e) { state.version = e.target.value; renderPreview(); });
+    document.getElementById('fSub').addEventListener('input', function (e) { state.subtitle = e.target.value; renderPreview(); });
+
+    document.getElementById('fModels').addEventListener('change', function (e) { state.showModels = e.target.checked; renderPreview(); });
+    document.getElementById('fSw').addEventListener('change', function (e) { state.showSw = e.target.checked; renderPreview(); });
+    document.getElementById('fLegend').addEventListener('change', function (e) { state.showLegend = e.target.checked; renderPreview(); });
+    document.getElementById('fTitle').addEventListener('change', function (e) { state.showTitle = e.target.checked; renderPreview(); });
+    document.getElementById('fColor').addEventListener('input', function (e) { state.linkColor = e.target.value; renderPreview(); });
+
+    nodeListEl.addEventListener('input', function (e) {
+      var el = e.target, f = el.getAttribute('data-f'), id = el.getAttribute('data-id');
+      if (!f || !id) return;
+      var n = byId(id); if (!n) return;
+      if (f === 'sw' || f === 'otherSw') {
+        n[f] = el.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+      } else {
+        n[f] = el.value;
+        if (f === 'name') {
+          var head = el.closest('.node-card').querySelector('.nm');
+          if (head) head.textContent = el.value || '(이름 없음)';
+        }
+      }
+      renderPreview();
+    });
+    nodeListEl.addEventListener('change', function (e) {
+      var el = e.target;
+      if (el.getAttribute('data-f') === 'icon' || el.getAttribute('data-f') === 'pos') {
+        var n = byId(el.getAttribute('data-id'));
+        if (n) n[el.getAttribute('data-f')] = el.value;
+        renderPreview();
+        if (el.getAttribute('data-f') === 'pos') renderNodeList();
+      }
+    });
+    nodeListEl.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-del-node]');
+      if (!b) return;
+      var id = b.getAttribute('data-del-node');
+      state.nodes = state.nodes.filter(function (n) { return n.id !== id; });
+      state.links = state.links.filter(function (l) { return l.from !== id && l.to !== id; });
+      refreshAll();
+    });
+
+    linkListEl.addEventListener('input', function (e) {
+      var el = e.target, k = el.getAttribute('data-l'), i = +el.getAttribute('data-i');
+      if (!k) return;
+      state.links[i][k] = el.value; renderPreview();
+    });
+    linkListEl.addEventListener('change', function (e) {
+      var el = e.target, k = el.getAttribute('data-l'), i = +el.getAttribute('data-i');
+      if (k === 'from' || k === 'to') { state.links[i][k] = el.value; renderPreview(); }
+    });
+    linkListEl.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-del-link]');
+      if (!b) return;
+      state.links.splice(+b.getAttribute('data-del-link'), 1);
+      refreshAll();
+    });
+
+    document.getElementById('btnAddNode').addEventListener('click', function () {
+      state.nodes.push({ id: newId(), name: '구성요소 ' + (state.nodes.length + 1), icon: 'pc', pos: 'top', model: '', vendor: '', sw: [], otherSw: [] });
+      refreshAll();
+    });
+    document.getElementById('btnAddLink').addEventListener('click', function () {
+      if (state.nodes.length < 2) { toast('구성요소를 먼저 2개 이상 추가해 주세요.'); return; }
+      state.links.push({ from: state.nodes[0].id, to: state.nodes[1].id, protocol: 'HTTP' });
+      refreshAll();
+    });
+
+    document.getElementById('btnJsonApply').addEventListener('click', function () {
+      var msg = document.getElementById('jsonMsg');
+      try {
+        var r = applyJSON(document.getElementById('fJson').value);
+        syncFields(); refreshAll();
+        msg.textContent = '적용했습니다 — 구성요소 ' + r.nodes + '개 · 연결 ' + r.links + '개';
+        toast('JSON을 적용했습니다.');
+      } catch (err) {
+        msg.textContent = err.message;
+      }
+    });
+    document.getElementById('btnJsonCopy').addEventListener('click', function () {
+      copyText(JSON.stringify(toJSON(), null, 2), '현재 구성을 JSON으로 복사했습니다.');
+    });
+    document.getElementById('btnPrompt').addEventListener('click', function () {
+      copyText(promptText(), 'AI 프롬프트를 복사했습니다.');
+    });
+
+    document.getElementById('btnSvg').addEventListener('click', function () {
+      var svg = renderSVG(compose());
+      saveBlob(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }), fileBase() + '.svg');
+      toast('SVG를 저장했습니다.');
+    });
+    document.getElementById('btnPng').addEventListener('click', function () {
+      var svg = renderSVG(compose());
+      var img = new Image();
+      var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      img.onload = function () {
+        var cv = document.createElement('canvas');
+        cv.width = W * 2; cv.height = H * 2;
+        var ctx = cv.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.drawImage(img, 0, 0, cv.width, cv.height);
+        cv.toBlob(function (blob) { saveBlob(blob, fileBase() + '.png'); toast('PNG를 저장했습니다.'); }, 'image/png');
+      };
+      img.onerror = function () { showErr('PNG 변환에 실패했습니다. SVG로 저장해 주세요.'); };
+      img.src = url;
+    });
+    document.getElementById('btnPptx').addEventListener('click', function () {
+      var btn = this;
+      btn.disabled = true;
+      var old = btn.textContent;
+      btn.textContent = '만드는 중…';
+      setTimeout(function () {
+        try {
+          var pptx = buildPPTX();
+          pptx.writeFile({ fileName: fileBase() + '.pptx' }).then(function () {
+            toast('PPTX를 저장했습니다.');
+          })['catch'](function (e) {
+            showErr('PPTX 생성에 실패했습니다: ' + (e && e.message ? e.message : e));
+          })['finally'](function () {
+            btn.disabled = false; btn.textContent = old;
+          });
+        } catch (e) {
+          showErr('PPTX 생성에 실패했습니다: ' + e.message);
+          btn.disabled = false; btn.textContent = old;
+        }
+      }, 30);
+    });
+
+    window.addEventListener('error', function (e) {
+      showErr('스크립트 오류: ' + (e.message || e.error));
+    });
+  }
+
+  /* ── 12. 시작 ─────────────────────────────────────────────────────── */
+  function init() {
+    bind();
+    loadPreset('web', true);
+    document.getElementById('jsonMsg').textContent = 'AI가 만든 JSON을 붙여넣고 [JSON 적용]을 누르세요.';
+    setTimeout(function () {
+      if (!window.PptxGenJS) {
+        document.getElementById('btnPptx').title = 'PPTX 라이브러리를 불러오지 못했습니다. 인터넷 연결 후 새로고침해 주세요(SVG·PNG는 그대로 동작).';
+      }
+    }, 6000);
+  }
+  document.addEventListener('DOMContentLoaded', init);
+  window.__gsBuilder = { state: state, compose: compose, renderSVG: renderSVG, buildPPTX: buildPPTX, applyJSON: applyJSON, toJSON: toJSON, promptText: promptText };
+})();
+</script>
+</body>
+</html>
