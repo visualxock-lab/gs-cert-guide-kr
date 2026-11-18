@@ -303,12 +303,12 @@
 
 이 체크리스트는 비공식 실무 자료입니다. 인증 범위·수수료·일정·시험 방법의 최종 확인은 공식 창구에서 받으세요.
 
-- KTL GS인증 소개·인증기준·절차: <https://customer.ktl.re.kr/web/contents/K101010800.do>
-- 신청·견적 문의: **gs@ktl.re.kr**
-- 대표 상담: **080-808-0114**
+- KTL SW시험·인증 포털(메인): <https://ktlsw.kr/main.do>
+- GS인증 소개·인증기준·절차·신청 안내·서식: <https://ktlsw.kr/user/GS_Authentication/GS_Info.do>
+- 공식 접수·견적 문의: **gs@ktl.re.kr**
+- IT융합기술센터 실무 담당자: `jwjung@ktl.re.kr` (02-860-1235) · `bassist@ktl.re.kr` (02-860-1563) · `yyoo@ktl.re.kr` (02-860-1197) · `alleyseo@ktl.re.kr` (02-860-1063)
 - 접수 창구: 한국산업기술시험원 IT융합기술센터 · 서울특별시 구로구 디지털로26길 87
-- 신청 서식 내려받기: <https://customer.ktl.re.kr/web/contents/K203000000.do>
-- 인증 제품 조회: <https://ktlsw.kr>
+- 인증 제품 조회: <https://ktlsw.kr/main.do>
 
 > 사전점검(컨설팅)을 먼저 받아 두면 체크리스트에서 "모른다"로 남은 항목을 접수 전에 정리할 수 있습니다. 접수 전 상담 시 이 문서의 0~4장을 그대로 보내도 좋습니다.
 

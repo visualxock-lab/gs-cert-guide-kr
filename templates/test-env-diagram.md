@@ -172,8 +172,10 @@ flowchart TB
 
 이 문서는 **비공식 실무 자료**입니다. 시험환경 요구사항과 사전점검 가능 여부는 공식 창구에서 확인하세요.
 
-- KTL GS인증 안내·절차: <https://customer.ktl.re.kr/web/contents/K101010800.do>
-- 신청·견적 문의: **gs@ktl.re.kr** · 대표 상담 **080-808-0114**
+- KTL SW시험·인증 포털(메인): <https://ktlsw.kr/main.do>
+- GS인증 소개·인증기준·절차·신청 안내·서식: <https://ktlsw.kr/user/GS_Authentication/GS_Info.do>
+- 공식 접수·견적 문의: **gs@ktl.re.kr**
+- IT융합기술센터 실무 담당자: `jwjung@ktl.re.kr` (02-860-1235) · `bassist@ktl.re.kr` (02-860-1563) · `yyoo@ktl.re.kr` (02-860-1197) · `alleyseo@ktl.re.kr` (02-860-1063)
 - 접수 창구: 한국산업기술시험원 IT융합기술센터 (서울특별시 구로구 디지털로26길 87)
 
 <sub>**면책** — 이 문서는 개인 실무 관점의 비공식 자료이며, KTL 및 다른 인증기관의 공식 안내서가 아닙니다. 그림의 IP·도메인·계정·모델명은 모두 가상의 예시값입니다. 시험환경 구성과 포트 정책의 최종 확인은 인증기관과 조직의 보안 규정을 따르세요.</sub>

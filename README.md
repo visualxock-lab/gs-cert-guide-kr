@@ -109,12 +109,12 @@ GS인증은 소프트웨어 제품의 품질을 국제표준 기반으로 시험
 
 | 항목 | 안내 |
 | --- | --- |
-| GS인증 소개 · 인증기준 · 절차 | <https://customer.ktl.re.kr/web/contents/K101010800.do> |
-| 신청·견적 문의 | **gs@ktl.re.kr** |
-| 대표 상담 전화 | **080-808-0114** |
+| KTL SW시험·인증 포털 (메인) | <https://ktlsw.kr/main.do> |
+| GS인증 소개 · 인증기준 · 절차 · 신청 안내·서식 | <https://ktlsw.kr/user/GS_Authentication/GS_Info.do> |
+| 공식 접수 · 견적 문의 | **gs@ktl.re.kr** |
+| IT융합기술센터 실무 담당자 | `jwjung@ktl.re.kr` (02-860-1235) · `bassist@ktl.re.kr` (02-860-1563) · `yyoo@ktl.re.kr` (02-860-1197) · `alleyseo@ktl.re.kr` (02-860-1063) |
 | 접수 창구 | 한국산업기술시험원 IT융합기술센터 · 서울특별시 구로구 디지털로26길 87 |
-| 인증 제품 조회 | [ktlsw.kr](https://ktlsw.kr) · [SWIT GS제품정보 종합검색](https://www.swit.or.kr/GS/gsauthen/listGSSw.jsp) |
-| 신청 서식 내려받기 | [KTL 접수/수수료 > 신청서 양식](https://customer.ktl.re.kr/web/contents/K203000000.do) |
+| 인증 제품 조회 | [ktlsw.kr](https://ktlsw.kr/main.do) · [SWIT GS제품정보 종합검색](https://www.swit.or.kr/GS/gsauthen/listGSSw.jsp) |
 
 **접수 시 기본 구비서류**(KTL 안내 기준): GS인증 견적의뢰서, 제품설명서, 사용자취급설명서, 사업자등록증 사본(최초 신청 시), 해당 시 중소기업확인서·협회 회원 증빙(수수료 할인), 보안성 평가 면제 대상 증빙.
 
@@ -142,4 +142,4 @@ GS인증은 소프트웨어 제품의 품질을 국제표준 기반으로 시험
 
 ---
 
-<sub>문서 기준일: 2026-11 · 이 저장소는 정기적으로 갱신됩니다. 최신 기준은 [KTL GS인증 안내](https://customer.ktl.re.kr/web/contents/K101010800.do)에서 확인하세요.</sub>
+<sub>문서 기준일: 2026-11 · 이 저장소는 정기적으로 갱신됩니다. 최신 기준은 [KTL GS인증 안내](https://ktlsw.kr/user/GS_Authentication/GS_Info.do)에서 확인하세요.</sub>
