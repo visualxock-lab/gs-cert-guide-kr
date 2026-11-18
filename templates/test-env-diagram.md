@@ -172,7 +172,7 @@ flowchart TB
 
 이 문서는 **비공식 실무 자료**입니다. 시험환경 요구사항과 사전점검 가능 여부는 공식 창구에서 확인하세요.
 
-- KTL SW시험·인증 포털(메인): <https://ktlsw.kr/main.do>
+- KTL SW시험·인증 포털(메인): <https://ktlsw.kr/>
 - GS인증 소개·인증기준·절차·신청 안내·서식: <https://ktlsw.kr/user/GS_Authentication/GS_Info.do>
 - 공식 접수·견적 문의: **gs@ktl.re.kr**
 - IT융합기술센터 실무 담당자: `jwjung@ktl.re.kr` (02-860-1235) · `bassist@ktl.re.kr` (02-860-1563) · `yyoo@ktl.re.kr` (02-860-1197) · `alleyseo@ktl.re.kr` (02-860-1063)
