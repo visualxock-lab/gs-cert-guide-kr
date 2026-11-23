@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://visualxock-lab.github.io/gs-cert-guide-kr/tools/schema/product-profile.schema.json",
+  "title": "GS인증 제품 프로파일 (product-profile) v0.1",
+  "description": "GS인증 실무 가이드의 도구들이 공유하는 단일 JSON 형식입니다. 구성도 빌더(diagram-builder.html)·기능목록 추출기(feature-list-extractor.html)·환경표 생성기 등이 같은 파일을 읽고 씁니다. 구성도 빌더가 이미 내보내는 { productName, version, subtitle, nodes[], links[] } 형식을 그대로 통과시키는 상위 호환 스키마이며, 여기에 product·components·functions·interfaces·screens·captures를 더한 형태입니다. 모든 예시 값은 가상값이며, 실제 제출 문서에는 실제 표기를 사용합니다.",
+  "type": "object",
+  "properties": {
+    "product": { "$ref": "#/$defs/product" },
+    "productName": {
+      "type": "string",
+      "description": "구성도 빌더 호환용 별칭. product.name과 같은 값을 기록합니다. 읽을 때는 product.name을 우선합니다."
+    },
+    "version": {
+      "type": "string",
+      "description": "구성도 빌더 호환용 별칭. product.version과 같은 값을 기록합니다."
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "구성도 빌더의 부제(선택). 예: \"제품설명서 · 설치 구성도\""
+    },
+    "components": {
+      "type": "array",
+      "description": "설치 구성요소(서버·단말·장비·SaaS 등). 물리적 객체 단위로 나누고, 한 서버에서 실행되는 프로그램은 components가 아니라 product의 소프트웨어 목록(sw)에 넣습니다.",
+      "items": { "$ref": "#/$defs/component" }
+    },
+    "nodes": {
+      "type": "array",
+      "description": "구성도 빌더 호환용 별칭. components와 같은 값을 기록합니다(같은 항목 형식).",
+      "items": { "$ref": "#/$defs/component" }
+    },
+    "links": {
+      "type": "array",
+      "description": "구성요소 사이의 통신 연결. 포트 번호는 쓰지 않고 프로토콜 이름만 적습니다.",
+      "items": { "$ref": "#/$defs/link" }
+    },
+    "functions": {
+      "type": "array",
+      "description": "기능목록 초안. 대분류(dae)·중분류(jung)·소분류(so)·기능명(name)으로 정리한 항목입니다. 인증 적합성 판정이 아니라 견적 문의용 초안입니다.",
+      "items": { "$ref": "#/$defs/function" }
+    },
+    "interfaces": {
+      "type": "array",
+      "description": "외부 시스템·장비와의 연계 정의.",
+      "items": { "$ref": "#/$defs/interface" }
+    },
+    "screens": {
+      "type": "array",
+      "description": "화면 목록. 캡처 목록·파일명 생성기의 입력이 됩니다.",
+      "items": { "$ref": "#/$defs/screen" }
+    },
+    "captures": {
+      "type": "array",
+      "description": "화면 캡처 촬영·보관 목록.",
+      "items": { "$ref": "#/$defs/capture" }
+    },
+    "meta": { "$ref": "#/$defs/meta" }
+  },
+  "anyOf": [
+    { "required": ["product"] },
+    { "required": ["productName"] },
+    { "required": ["components"] },
+    { "required": ["nodes"] },
+    { "required": ["functions"] }
+  ],
+  "additionalProperties": true,
+  "$defs": {
+    "product": {
+      "type": "object",
+      "description": "제품 기본 정보. 제출 문서의 공식 표기와 같아야 합니다.",
+      "properties": {
+        "name": { "type": "string", "description": "제품명(공식 표기).", "examples": ["○○ 스마트 설비관리 시스템"] },
+        "version": { "type": "string", "description": "버전.", "examples": ["V1.0", "1.2.3"] },
+        "deployType": {
+          "type": "string",
+          "description": "배포 형태. 예: 웹(서버 설치형), 모바일 앱(스토어 배포), 어플라이언스(장비 탑재), API·연계 모듈, 데스크톱(PC 설치형).",
+          "examples": ["웹(서버 설치형)"]
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["none", "full"],
+          "default": "none",
+          "description": "이 파일이 담고 있는 범위. none = 구성도 등 일부만, full = 기능목록까지 포함."
+        }
+      },
+      "additionalProperties": true
+    },
+    "component": {
+      "type": "object",
+      "description": "설치 구성요소 한 건. 구성도 빌더의 nodes 항목과 같은 형식입니다.",
+      "properties": {
+        "id": { "type": "string", "description": "파일 안에서 유일한 식별자. 예: srv, pc1" },
+        "name": { "type": "string", "minLength": 1, "description": "구성요소 이름. 예: 업무 서버" },
+        "type": {
+          "type": "string",
+          "description": "구성요소 종류. server | appliance | device | saas 를 기본값으로 하고, 구성도 빌더의 아이콘 이름(pc, mobile, camera, sensor, plc, meter, gateway, cloud, db, storage, switch, firewall, ups, aircon, inverter, terminal, printer, ai)도 함께 허용합니다."
+        },
+        "icon": { "type": "string", "description": "구성도 빌더 아이콘 이름. 없으면 type을 사용합니다." },
+        "pos": {
+          "type": "string",
+          "enum": ["center", "top", "bottom", "left", "right"],
+          "description": "구성도에서의 배치. 중앙 서버 1대만 center로 둡니다."
+        },
+        "model": { "type": "string", "description": "모델명. 제품설명서 장비 표의 표기 그대로." },
+        "vendor": { "type": "string", "description": "제조사." },
+        "os": { "type": "string", "description": "운영체제와 버전." },
+        "mw": { "type": "string", "description": "미들웨어(WAS·웹서버 등)." },
+        "db": { "type": "string", "description": "DBMS와 버전." },
+        "ip": { "type": "string", "description": "IP 주소. 외부 공유 문서에는 마스킹 값을 권장합니다." },
+        "port": {
+          "type": ["integer", "string"],
+          "description": "포트 번호. 구성도에는 쓰지 않고 환경표에서만 사용합니다."
+        },
+        "sw": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "이 구성요소에서 실행되는 인증 범위 소프트웨어(제품명·버전)."
+        },
+        "otherSw": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "인증 범위 밖 소프트웨어(OS·DBMS 등). 예: \"- Ubuntu 22.04 LTS 64bit\""
+        }
+      },
+      "required": ["name"],
+      "additionalProperties": true
+    },
+    "link": {
+      "type": "object",
+      "description": "구성요소 사이의 연결.",
+      "properties": {
+        "from": { "type": "string", "description": "출발 구성요소 id" },
+        "to": { "type": "string", "description": "도착 구성요소 id" },
+        "protocol": { "type": "string", "description": "프로토콜 이름만. 예: HTTPS, RTSP, Modbus TCP, MQTT, SMB, SMTP" }
+      },
+      "required": ["from", "to"],
+      "additionalProperties": true
+    },
+    "function": {
+      "type": "object",
+      "description": "기능목록 한 행. 대분류·중분류·소분류는 목록의 뼈대이고, name이 실제 기능(사용자가 하는 동작)입니다.",
+      "properties": {
+        "id": { "type": "string", "description": "행 식별자(선택). 예: F-001" },
+        "dae": { "type": "string", "description": "대분류. 예: 설비 관리" },
+        "jung": { "type": "string", "description": "중분류. 예: 설비 점검" },
+        "so": { "type": "string", "description": "소분류(메뉴·화면 단위). 예: 점검 계획" },
+        "name": { "type": "string", "minLength": 1, "description": "기능명. 예: 점검 주기 설정" },
+        "evidence": {
+          "description": "근거 위치. 문자열 또는 { page, screen, api, section, text } 객체. 확인되지 않았으면 비웁니다.",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "page": { "type": "string", "description": "매뉴얼 페이지. 예: p.12" },
+                "screen": { "type": "string", "description": "화면 번호·메뉴 경로. 예: 화면 3-2" },
+                "api": { "type": "string", "description": "API 경로. 예: /api/users" },
+                "section": { "type": "string", "description": "장·절 번호. 예: 3.2.1" },
+                "text": { "type": "string", "description": "자유 서술" }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "note": { "type": "string", "description": "비고. 확인 필요 사항·가정·제외 사유 등." }
+      },
+      "required": ["name"],
+      "additionalProperties": true
+    },
+    "interface": {
+      "type": "object",
+      "description": "연계 정의 한 건.",
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "protocol": { "type": "string" },
+        "dataFormat": { "type": "string", "description": "주고받는 데이터 형식. 예: JSON, XML, CSV" }
+      },
+      "required": ["from", "to"],
+      "additionalProperties": true
+    },
+    "screen": {
+      "type": "object",
+      "description": "화면 한 건.",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "menuPath": { "type": "string", "description": "메뉴 경로. 예: 설비 관리 > 점검 > 점검 계획" }
+      },
+      "required": ["name"],
+      "additionalProperties": true
+    },
+    "capture": {
+      "type": "object",
+      "description": "화면 캡처 한 건.",
+      "properties": {
+        "screenId": { "type": "string" },
+        "file": { "type": "string" },
+        "shotDate": { "type": "string", "description": "촬영일. YYYY-MM-DD" }
+      },
+      "required": ["screenId"],
+      "additionalProperties": true
+    },
+    "meta": {
+      "type": "object",
+      "description": "이 파일을 만든 도구 정보. 없어도 됩니다.",
+      "properties": {
+        "schemaVersion": { "type": "string", "examples": ["0.1"] },
+        "generatedBy": { "type": "string", "examples": ["feature-list-extractor.html"] },
+        "generatedAt": { "type": "string", "description": "ISO 8601 시각. 예: 2026-11-23T09:00:00+09:00" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

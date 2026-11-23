@@ -5,6 +5,7 @@
 
 - 문서 사이트처럼 읽기: 이 README → 필요한 문서로 바로 이동
 - **구성도 바로 그리기**: [`tools/diagram-builder.html`](tools/diagram-builder.html) (설치 없이 브라우저에서 실행 → PPTX 다운로드)
+- **기능목록 초안 뽑기**: [`tools/feature-list-extractor.html`](tools/feature-list-extractor.html) (매뉴얼·메뉴표 → 엑셀·CSV·마크다운·JSON)
 - AI 에이전트·LLM에게 이 저장소를 알리려면: [`llms.txt`](llms.txt)
 - 라이선스·기여 방법: [문서 끝](#라이선스--기여) 참고
 
@@ -38,6 +39,9 @@ GS인증은 소프트웨어 제품의 품질을 국제표준 기반으로 시험
 | [`templates/architecture-diagrams.md`](templates/architecture-diagrams.md) | **② 제품 설치 구성도** — 5가지 표기 규격(물리적 객체·양방향 연결선·프로토콜 중심·빨간 점선 GS인증 범위·범례) + **AI 프롬프트 가이드** + Mermaid 템플릿 3종 | 개정판 |
 | [`templates/test-env-diagram.md`](templates/test-env-diagram.md) | **① 신청·시험환경 사전확인용 구성도** — 망 구간·**IP:포트**·접속 계정·재현 가능한 데이터까지 담는 네트워크 도표 + 접속 정보표 + 사전점검 체크리스트 | 신규 |
 | [`tools/diagram-builder.html`](tools/diagram-builder.html) | **설치 구성도 웹 빌더** — 프리셋 2종 / 폼 편집 / JSON 붙여넣기 → 실시간 미리보기 → **편집 가능한 `.pptx`**·SVG·PNG 다운로드 | 프로토타입 |
+| [`guides/02-scope-and-feature-list.md`](guides/02-scope-and-feature-list.md) | **2회차 · 인증 범위 확정 · 견적의뢰서 5가지 · 기능목록(대·중·소) 초안 뽑기** — 견적 전에 고정할 5가지 + 자주 빠지는 실수 3가지, 「화면 1개 = 기능 1개」 원칙 4가지, 짝꿍 도구 사용법, 공식 사전상담 창구 | 초판 |
+| [`tools/feature-list-extractor.html`](tools/feature-list-extractor.html) | **기능목록 추출기** — 매뉴얼(`.docx`·`.pdf`·`.txt`·`.md`)·기능표(`.csv`·`.xlsx`)·DB 메뉴표 → 기능목록(대·중·소) 초안 → **엑셀·CSV·마크다운·공통 JSON**. 서버 전송 없는 브라우저 로컬 처리, 1편 빌더의 JSON 이어받기 | 프로토타입 |
+| [`tools/schema/product-profile.schema.json`](tools/schema/product-profile.schema.json) | **공통 JSON 스키마(`product-profile` v0.1)** — 구성도 빌더·기능목록 추출기·이후 환경표 도구가 같은 형식으로 읽고 쓰는 상위 호환 스키마 | 신규 |
 | [`llms.txt`](llms.txt) | AI 에이전트용 저장소 요약과 문서 지도 | 개정판 |
 | [`preview/`](preview) | 구성도 3종 렌더링 PNG와 빌더 화면, 예시 PPTX (원본은 코드·데이터) | 갱신 |
 
@@ -51,7 +55,7 @@ GS인증은 소프트웨어 제품의 품질을 국제표준 기반으로 시험
 
 - [x] 사전준비 자가진단 체크리스트
 - [ ] 접수부터 인증서까지 일정 역산표 (평가 대기 포함)
-- [ ] 견적 의뢰 전에 정리해 두면 좋은 5가지 (제품 범위·기능 수·배포 형태)
+- [x] 견적 의뢰 전에 정리해 두면 좋은 5가지 (제품 범위·기능 수·배포 형태) → [`guides/02-scope-and-feature-list.md`](guides/02-scope-and-feature-list.md) (기능목록 대·중·소 초안 뽑기 + [`기능목록 추출기`](tools/feature-list-extractor.html) 포함)
 - [ ] FAQ: 재인증·부분변경·다국어 시험은 언제 해당되나
 
 ### 시즌 2 — 아키텍처별 구성도 템플릿
