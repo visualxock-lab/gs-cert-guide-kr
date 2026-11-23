@@ -43,7 +43,7 @@ GS인증은 소프트웨어 제품의 품질을 국제표준 기반으로 시험
 | [`tools/feature-list-extractor.html`](tools/feature-list-extractor.html) | **기능목록 추출기** — 매뉴얼(`.docx`·`.pdf`·`.txt`·`.md`)·기능표(`.csv`·`.xlsx`)·DB 메뉴표 → 기능목록(대·중·소) 초안 → **엑셀·CSV·마크다운·공통 JSON**. 서버 전송 없는 브라우저 로컬 처리, 1편 빌더의 JSON 이어받기 | 프로토타입 |
 | [`tools/schema/product-profile.schema.json`](tools/schema/product-profile.schema.json) | **공통 JSON 스키마(`product-profile` v0.1)** — 구성도 빌더·기능목록 추출기·이후 환경표 도구가 같은 형식으로 읽고 쓰는 상위 호환 스키마 | 신규 |
 | [`llms.txt`](llms.txt) | AI 에이전트용 저장소 요약과 문서 지도 | 개정판 |
-| [`preview/`](preview) | 구성도 3종 렌더링 PNG와 빌더 화면, 예시 PPTX (원본은 코드·데이터) | 갱신 |
+| [`preview/`](preview) | 구성도 3종 렌더링 PNG와 빌더·기능목록 추출기 화면, 예시 PPTX (원본은 코드·데이터) | 갱신 |
 
 ---
 
